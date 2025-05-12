@@ -15,6 +15,6 @@ export class User extends AbstractEntity<User> {
   @Column()
   password: string;
 
-  @Column({ type: 'enum' })
+  @Column({ type: 'enum', enum: Role, enumName: 'user_role_enum' })
   role: Role;
-}
+} 

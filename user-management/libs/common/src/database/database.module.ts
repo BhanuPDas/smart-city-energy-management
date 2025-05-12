@@ -12,4 +12,8 @@ import { typeOrmConfig } from '../config/typeorm.config';
     }),
   ],
 })
-export class DatabaseModule {}
+export class DatabaseModule {
+  static forFeature(entities: any[]){
+    return TypeOrmModule.forFeature(entities);
+  }
+}
