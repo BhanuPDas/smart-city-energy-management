@@ -2,6 +2,7 @@ import {
   ConflictException,
   Injectable,
   InternalServerErrorException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { UsersRepository } from './users.repository';
 import { User } from './entities/user.entity';
@@ -55,4 +56,17 @@ export class UsersService {
   async findOneAndDelete(userId: Long): Promise<string> {
     return await this.userRepository.findOneAndDelete({ userId });
   }
+
+  
+    async verifyUser(email: string, password: string): Promise<User> {
+    const user = await this.userRepository.findOne({ email });
+
+    const passwordIsValid = await bcrypt.compare(password, user.password);
+    if (!passwordIsValid) {
+      throw new UnauthorizedException('Invalid credentials');
+    }
+
+    return user;
+  }
+  
 }
