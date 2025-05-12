@@ -3,10 +3,10 @@ import { Column, Entity } from 'typeorm';
 
 @Entity()
 export class User extends AbstractEntity<User> {
-  @Column()
+  @Column({ nullable: false })
   name: string;
 
-  @Column()
+  @Column({ unique: true, nullable: false })
   email: string;
 
   @Column()
@@ -17,4 +17,8 @@ export class User extends AbstractEntity<User> {
 
   @Column({ type: 'enum', enum: Role, enumName: 'user_role_enum' })
   role: Role;
-} 
+
+  constructor(user: Partial<User>) {
+    super(user);
+  }
+}

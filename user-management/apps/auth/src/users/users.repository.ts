@@ -9,8 +9,9 @@ export class UsersRepository extends AbstractRepository<User> {
   protected readonly logger = new Logger(UsersRepository.name);
 
   constructor(
-    @InjectRepository(User) private readonly usersRepository: Repository<User>,
-    protected readonly entityManager: EntityManager
+    @InjectRepository(User)
+    protected readonly usersRepository: Repository<User>,
+    protected readonly entityManager: EntityManager,
   ) {
     super(usersRepository, entityManager);
   }

@@ -1,7 +1,7 @@
 import { Long, PrimaryGeneratedColumn } from 'typeorm';
 
 export class AbstractEntity<T> {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn('increment')
   userId: Long;
 
   constructor(entity: Partial<T>) {
