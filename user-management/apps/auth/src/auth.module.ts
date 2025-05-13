@@ -5,6 +5,10 @@ import { UsersModule } from './users/users.module';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { LoggerModule } from 'nestjs-pino';
+import { APP_GUARD } from '@nestjs/core';
+import { JwtAuthGuard, RolesGuard } from '@app/common/auth';
+import { ClientsModule, Transport } from '@nestjs/microservices';
+import { SERVICE } from '@app/common/constants/services';
 
 @Module({
   imports: [
@@ -30,8 +34,25 @@ import { LoggerModule } from 'nestjs-pino';
         },
       },
     }),
+    ClientsModule.register([
+      {
+        name: SERVICE.AUTH_SERVICE,
+        transport: Transport.TCP,
+        options: { host: 'localhost', port: 8001 },
+      },
+    ]),
   ],
-  providers: [AuthService],
+  providers: [
+    AuthService,
+    {
+      provide: APP_GUARD,
+      useClass: JwtAuthGuard, // globally enforce JWT
+    },
+    {
+      provide: APP_GUARD,
+      useClass: RolesGuard, // globally enforce roles when @Roles() used
+    },
+  ],
   controllers: [AuthController],
 })
 export class AuthModule {}

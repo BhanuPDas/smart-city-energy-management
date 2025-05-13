@@ -1,22 +1,35 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+  UseGuards,
+} from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDTO } from './DTO/create-user.dto';
 import { User } from './entities/user.entity';
 import { Long } from 'typeorm';
 import { UpdateUserDTO } from './DTO/update-user.dto';
 import { JwtAuthGuard } from '../guards/jwt.-auth.guard';
+import { Roles, RolesGuard } from '@app/common/auth';
+import { Public, Role } from '@app/common';
 
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Post('register')
+  @Public()
   async createUser(@Body() createUserDto: CreateUserDTO): Promise<User> {
     return await this.usersService.createUser(createUserDto);
   }
 
   @Get()
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.CITIZEN)
   async findAll(): Promise<User[]> {
     return await this.usersService.findAll();
   }
