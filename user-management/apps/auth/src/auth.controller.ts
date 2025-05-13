@@ -1,4 +1,4 @@
-import { Controller, Post, Res, UseGuards } from '@nestjs/common';
+import { Controller, Post, Req, Res, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { CurrentUser } from './current-user.decorator';
@@ -8,7 +8,7 @@ import { MessagePattern, Payload } from '@nestjs/microservices';
 import { JwtAuthGuard } from './guards/jwt.-auth.guard';
 import { Public } from '@app/common';
 
-@Controller('auth')
+@Controller({ path: 'auth', version: '1' })
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
@@ -33,5 +33,12 @@ export class AuthController {
   @MessagePattern('authenticate')
   async authenticate(@Payload() data: any) {
     return data.user;
+  }
+
+  @Post('verify')
+  @UseGuards(JwtAuthGuard)
+  verify(@Req() req) {
+    // JwtAuthGuard has already attached the payload on req.user
+    return req.user;
   }
 }

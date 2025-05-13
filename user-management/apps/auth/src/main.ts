@@ -1,6 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { AuthModule } from './auth.module';
-import { ValidationPipe } from '@nestjs/common';
+import { ValidationPipe, VersioningType } from '@nestjs/common';
 import { Logger } from 'nestjs-pino';
 import * as cookieParser from 'cookie-parser';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
@@ -20,6 +20,11 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
   app.useLogger(app.get(Logger));
   app.use(cookieParser());
+
+  app.enableVersioning({
+    type: VersioningType.URI,
+  });
+  
   await app.startAllMicroservices();
 
   await app.listen(conifgService.getOrThrow('HTTTP_PORT'));

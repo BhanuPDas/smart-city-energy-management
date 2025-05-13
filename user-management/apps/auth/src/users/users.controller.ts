@@ -17,7 +17,7 @@ import { JwtAuthGuard } from '../guards/jwt.-auth.guard';
 import { Roles, RolesGuard } from '@app/common/auth';
 import { Public, Role } from '@app/common';
 
-@Controller('users')
+@Controller({ path: 'users', version: '1' })
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
