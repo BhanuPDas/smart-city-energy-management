@@ -36,7 +36,7 @@ export class JwtAuthGuard implements CanActivate {
     const token = request.cookies?.Authentication;
 
     if (!token) {
-      throw new UnauthorizedException('Token not found');
+      throw new UnauthorizedException('Token not found - Operation not authorized');
     }
 
     return this.authClientProxy

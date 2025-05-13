@@ -6,7 +6,7 @@ import { User } from './users/entities/user.entity';
 import { Response } from 'express';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 import { JwtAuthGuard } from './guards/jwt.-auth.guard';
-import { Public } from '@app/common';
+import { Public, SwaggerLogin, SwaggerLogout, SwaggerVerifyUser } from '@app/common';
 
 @Controller({ path: 'auth', version: '1' })
 export class AuthController {
@@ -15,6 +15,7 @@ export class AuthController {
   @Public()
   @Post('login')
   @UseGuards(LocalAuthGuard)
+  @SwaggerLogin(User)
   login(
     @CurrentUser() user: User,
     @Res({ passthrough: true }) response: Response,
@@ -23,6 +24,7 @@ export class AuthController {
   }
 
   @Post('logout')
+  @SwaggerLogout(User)
   logout(@Res({ passthrough: true }) response: Response) {
     // response.clearCookie('access_token');
     // return response.sendStatus(200);
@@ -37,6 +39,7 @@ export class AuthController {
 
   @Post('verify')
   @UseGuards(JwtAuthGuard)
+  @SwaggerVerifyUser(User)
   verify(@Req() req) {
     // JwtAuthGuard has already attached the payload on req.user
     return req.user;

@@ -15,7 +15,7 @@ import { Long } from 'typeorm';
 import { UpdateUserDTO } from './DTO/update-user.dto';
 import { JwtAuthGuard } from '../guards/jwt.-auth.guard';
 import { Roles, RolesGuard } from '@app/common/auth';
-import { Public, Role } from '@app/common';
+import { Public, Role, SwaggerCreateUSER, SwaggerDeleteUser, SwaggerGetAllUsers, SwaggerGetUserByEmail, SwaggerGetUserById, SwaggerUpdateUser } from '@app/common';
 
 @Controller({ path: 'users', version: '1' })
 export class UsersController {
@@ -23,6 +23,7 @@ export class UsersController {
 
   @Post('register')
   @Public()
+  @SwaggerCreateUSER(User)
   async createUser(@Body() createUserDto: CreateUserDTO): Promise<User> {
     return await this.usersService.createUser(createUserDto);
   }
@@ -30,21 +31,25 @@ export class UsersController {
   @Get()
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(Role.CITIZEN)
+  @SwaggerGetAllUsers(User)
   async findAll(): Promise<User[]> {
     return await this.usersService.findAll();
   }
 
   @Get('/email/:email')
+  @SwaggerGetUserByEmail(User)
   async findOne(@Param('email') email: string): Promise<User> {
     return await this.usersService.findOne(email);
   }
 
   @Get('/id/:id')
+  @SwaggerGetUserById(User)
   async findOneById(@Param('id') id: Long): Promise<User> {
     return await this.usersService.findOneById(id);
   }
 
   @Put('/id/:id')
+  @SwaggerUpdateUser(User)
   async findOneAndUpdate(
     @Param('id') id: Long,
     @Body() updateUserDto: UpdateUserDTO,
@@ -53,6 +58,7 @@ export class UsersController {
   }
 
   @Delete('/id/:id')
+  @SwaggerDeleteUser(User)
   async findOneAndDelete(@Param('id') id: Long): Promise<string> {
     return await this.usersService.findOneAndDelete(id);
   }

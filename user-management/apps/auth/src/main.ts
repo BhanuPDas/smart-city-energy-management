@@ -5,6 +5,7 @@ import { Logger } from 'nestjs-pino';
 import * as cookieParser from 'cookie-parser';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { ConfigService } from '@nestjs/config';
+import { setupSwagger } from './swagger.config';
 
 async function bootstrap() {
   const app = await NestFactory.create(AuthModule);
@@ -25,6 +26,8 @@ async function bootstrap() {
     type: VersioningType.URI,
   });
   
+  setupSwagger(app);
+
   await app.startAllMicroservices();
 
   await app.listen(conifgService.getOrThrow('HTTTP_PORT'));
