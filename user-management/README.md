@@ -1,5 +1,7 @@
-# User Management App Documentation
-
+# User Management App Documentation 
+<br/> <br/>
+Version 1
+<br/> <br/>
 ## 1. Overview
 
 This User Management microservice is responsible for user related operations such as: 
