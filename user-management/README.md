@@ -10,7 +10,9 @@ Verify the incoming HTTP requests and attach user to them.<br/>
 
 ## 2. Quick Start
 Run the service: <br/>
-```bash Docker-compose up ```
+```bash 
+Docker-compose up
+```
 
 ## 3. Usage
 After spinning up the docker image. Head to http://localhost:3000/api-docs where the API documention exists. <br/> 
