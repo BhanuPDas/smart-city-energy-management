@@ -31,8 +31,16 @@ export class JwtAuthGuard implements CanActivate {
       return true;
     }
 
+ 
+
     // 2) otherwise enforce JWT
     const request = context.switchToHttp().getRequest();
+    const path = request.url;
+
+    if (path === '/metrics') {
+      return true;
+    }
+
     const token = request.cookies?.Authentication;
 
     if (!token) {

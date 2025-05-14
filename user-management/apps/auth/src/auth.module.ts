@@ -5,10 +5,13 @@ import { UsersModule } from './users/users.module';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { LoggerModule } from 'nestjs-pino';
-import { APP_GUARD } from '@nestjs/core';
+import { APP_GUARD, APP_INTERCEPTOR,  } from '@nestjs/core';
 import { JwtAuthGuard, RolesGuard } from '@app/common/auth';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { SERVICE } from '@app/common/constants/services';
+import { HttpModule } from '@nestjs/axios';
+import { PrometheusModule } from "@willsoto/nestjs-prometheus";
+import { LoggingInterceptor } from './Logging/logging.interceptor';
 
 @Module({
   imports: [
@@ -41,6 +44,18 @@ import { SERVICE } from '@app/common/constants/services';
         options: { host: 'localhost', port: 8001 },
       },
     ]),
+
+    HttpModule.register({
+      timeout: 5000,
+      maxRedirects: 5,
+    }),
+
+    PrometheusModule.register({
+      path: '/metrics',
+      defaultMetrics: {
+        enabled: true,
+      },
+    })
   ],
   providers: [
     AuthService,
@@ -52,6 +67,10 @@ import { SERVICE } from '@app/common/constants/services';
       provide: APP_GUARD,
       useClass: RolesGuard, // globally enforce roles when @Roles() used
     },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: LoggingInterceptor
+    }
   ],
   controllers: [AuthController],
 })
