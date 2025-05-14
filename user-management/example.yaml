@@ -1,37 +1,12 @@
+version: '3.8'
 services:
-  auth:
-    build: 
-      context: .
-      dockerfile: ./apps/auth/Dockerfile
-      target: development
-    command: npm run start:dev auth
-    env_file:
-      - ./.env
-    environment:
-      - DB_HOST=db
-      - DB_PORT=5432
-    ports:
-      - '4000:4000'
-    volumes:
-      - .:/usr/src/app
-  db:
-    image: postgres:14.1-alpine
-    env_file:
-      - .env
-    environment:
-      - POSTGRES_USER=${DB_USERNAME}
-      - POSTGRES_PASSWORD=${DB_PASSWORD}
-      - POSTGRES_DB=${DB_NAME}
-    ports:
-      - '5433:5432'
-    volumes:
-      - pgdata:/var/lib/postgresql/data
-
   loki:
     image: grafana/loki
     ports:
       - '3100:3100'
     command: -config.file=/etc/loki/local-config.yaml
+    networks:
+      - logging
 
   prometheus:
     image: prom/prometheus
@@ -39,6 +14,8 @@ services:
       - '9090:9090'
     volumes:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    networks:
+      - logging
 
   grafana:
     image: grafana/grafana
@@ -51,6 +28,9 @@ services:
     depends_on:
       - loki
       - prometheus
-    
-volumes:
-  pgdata:
+    networks:
+      - logging
+
+networks:
+  logging:
+    driver: bridge
