@@ -24,7 +24,7 @@ Under each route, you will find details such as what is the body or the param ne
 - register
 - then test the rest of the API ops. 
 
-## 4. Within the scope of this microservice: 
+## 4. Within the scope of this microservice and for testing purposes: 
 
 ### Exist the Nestjs app and the Grafana Tools under the following URLS :
 - NestJS App: http://localhost:4000
