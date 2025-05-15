@@ -11,6 +11,7 @@ import { LokiLogger } from './Logging/logging.service';
 async function bootstrap() {
   const app = await NestFactory.create(AuthModule, {
      logger: new LokiLogger(),
+     bufferLogs: true
   });
   const conifgService = app.get(ConfigService);
 

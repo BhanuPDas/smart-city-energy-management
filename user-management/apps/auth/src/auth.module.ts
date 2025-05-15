@@ -12,7 +12,7 @@ import { SERVICE } from '@app/common/constants/services';
 import { HttpModule } from '@nestjs/axios';
 import { PrometheusModule } from '@willsoto/nestjs-prometheus';
 import { LoggingInterceptor } from './Logging/logging.interceptor';
-import { EurekaModule } from 'ms-nestjs-eureka';
+import { EurekaClientModule } from './eureka-client/eureka-client.module';
 
 @Module({
   imports: [
@@ -58,20 +58,36 @@ import { EurekaModule } from 'ms-nestjs-eureka';
       },
     }),
 
-    // EurekaModule.forRoot({
-    //   eureka: {
-    //     host: 'localhost',
-    //     port: 8761,
-    //     registryFetchInterval: 1000,
-    //     servicePath: '/eureka/apps/',
-    //     maxRetries: 3,
-    //     //debug: true
-    //   },
-    //   service: {
-    //     name: 'user_management',
-    //     port: 4000,
-    //   },
-    // }),
+    EurekaClientModule.forRootAsync({
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        instance: {
+          app: configService.getOrThrow<string>('SERVICE_NAME'),
+          hostName: configService.getOrThrow<string>('SERVICE_HOST'),
+          instanceId:configService.getOrThrow<string>('SERVICE_NAME'),
+          ipAddr: configService.getOrThrow<string>('SERVICE_ipAddr'),
+          port: {
+            $: Number(configService.getOrThrow<number>('SERVICE_PORT')),
+            '@enabled': true,
+          },
+          vipAddress: configService.getOrThrow<string>('SERVICE_NAME'),
+          dataCenterInfo: {
+            '@class': 'com.netflix.appinfo.InstanceInfo$DefaultDataCenterInfo',
+            name: 'MyOwn',
+          },
+        },
+        eureka: {
+          host: configService.getOrThrow<string>('EUREKA_SERVER_HOST'),
+          port: configService.getOrThrow<number>('EUREKA_SERVER_PORT'),
+          fetchRegistry: true,
+          registryFetchInterval: 10000,
+          maxRetries: 5,
+          requestRetryDelay: 10000,
+          heartbeatInterval: 1000,
+          servicePath: '/eureka/apps/',
+        },
+      }),
+    }),
   ],
   providers: [
     AuthService,
