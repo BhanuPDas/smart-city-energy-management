@@ -58,20 +58,20 @@ import { EurekaModule } from 'ms-nestjs-eureka';
       },
     }),
 
-    EurekaModule.forRoot({
-      eureka: {
-        host: 'localhost',
-        port: 8761,
-        registryFetchInterval: 1000,
-        servicePath: '/eureka/apps/',
-        maxRetries: 3,
-        //debug: true
-      },
-      service: {
-        name: 'user_management',
-        port: 4000,
-      },
-    }),
+    // EurekaModule.forRoot({
+    //   eureka: {
+    //     host: 'localhost',
+    //     port: 8761,
+    //     registryFetchInterval: 1000,
+    //     servicePath: '/eureka/apps/',
+    //     maxRetries: 3,
+    //     //debug: true
+    //   },
+    //   service: {
+    //     name: 'user_management',
+    //     port: 4000,
+    //   },
+    // }),
   ],
   providers: [
     AuthService,
