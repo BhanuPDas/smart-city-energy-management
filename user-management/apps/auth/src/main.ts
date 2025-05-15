@@ -6,12 +6,10 @@ import * as cookieParser from 'cookie-parser';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { ConfigService } from '@nestjs/config';
 import { setupSwagger } from './swagger.config';
-import { LokiLogger } from './Logging/logging.service';
 
 async function bootstrap() {
   const app = await NestFactory.create(AuthModule, {
-     logger: new LokiLogger(),
-     bufferLogs: true
+    bufferLogs: true,
   });
   const conifgService = app.get(ConfigService);
 

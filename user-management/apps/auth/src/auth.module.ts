@@ -5,13 +5,12 @@ import { UsersModule } from './users/users.module';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { LoggerModule } from 'nestjs-pino';
-import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
+import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard, RolesGuard } from '@app/common/auth';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { SERVICE } from '@app/common/constants/services';
 import { HttpModule } from '@nestjs/axios';
 import { PrometheusModule } from '@willsoto/nestjs-prometheus';
-import { LoggingInterceptor } from './Logging/logging.interceptor';
 import { EurekaClientModule } from './eureka-client/eureka-client.module';
 
 @Module({
@@ -27,16 +26,31 @@ import { EurekaClientModule } from './eureka-client/eureka-client.module';
       }),
     }),
 
-    LoggerModule.forRoot({
-      pinoHttp: {
-        transport: {
-          target: 'pino-pretty',
-          options: {
-            singleLine: true,
-            autoLogging: false,
+    LoggerModule.forRootAsync({
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        pinoHttp: {
+          transport: {
+            targets: [
+              // send logs to Loki
+              {
+                target: 'pino-loki',
+                options: {
+                  host: configService.getOrThrow<string>('LOKI_URL'),
+                  labels: { app: 'auth-service', env: 'development' }, 
+                  batching: true, 
+                  interval: 5,
+                },
+              },
+              // keeping pretty-printing for local development
+              {
+                target: 'pino-pretty',
+                options: { singleLine: true, autoLogging: false },
+              },
+            ],
           },
         },
-      },
+      }),
     }),
     ClientsModule.register([
       {
@@ -64,7 +78,7 @@ import { EurekaClientModule } from './eureka-client/eureka-client.module';
         instance: {
           app: configService.getOrThrow<string>('SERVICE_NAME'),
           hostName: configService.getOrThrow<string>('SERVICE_HOST'),
-          instanceId:configService.getOrThrow<string>('SERVICE_NAME'),
+          instanceId: configService.getOrThrow<string>('SERVICE_NAME'),
           ipAddr: configService.getOrThrow<string>('SERVICE_ipAddr'),
           port: {
             $: Number(configService.getOrThrow<number>('SERVICE_PORT')),
@@ -98,10 +112,6 @@ import { EurekaClientModule } from './eureka-client/eureka-client.module';
     {
       provide: APP_GUARD,
       useClass: RolesGuard, // globally enforce roles when @Roles() used
-    },
-    {
-      provide: APP_INTERCEPTOR,
-      useClass: LoggingInterceptor,
     },
   ],
   controllers: [AuthController],
