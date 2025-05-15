@@ -2,7 +2,7 @@ import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { Eureka, EurekaClient } from 'eureka-js-client';
 
 @Injectable()
-export class EurekaClientService implements OnModuleInit {
+export class EurekaClientService {
   private client: Eureka;
   private readonly logger = new Logger(EurekaClientService.name);
 
@@ -17,15 +17,14 @@ export class EurekaClientService implements OnModuleInit {
     };
 
     this.client = new Eureka(options);
-  }
-
-
-  onModuleInit() { // to invoke the startClient() once the module spins up.
     this.startClient();
   }
 
-  private startClient() {
+  // onModuleInit() { // to invoke the startClient() once the module spins up.
+  //this.startClient();
+  // }
 
+  private startClient() {
     this.client.start((error) => {
       this.logger.log('Attempting to register with Eureka Server...');
 
@@ -36,8 +35,9 @@ export class EurekaClientService implements OnModuleInit {
       if (error) {
         switch (error.name) {
           case 'AggregateError':
-            if ((error as any)?.code === 'ECONNREFUSED') { // when there's connection err (e.g, eureka server down)
-              this.options.logger?.error(
+            if ((error as any)?.code === 'ECONNREFUSED') {
+              // when there's connection err (e.g, eureka server down)
+              this.logger.error(
                 '[ECONNREFUSED]: connection refused by Eureka server',
               );
             } else {
