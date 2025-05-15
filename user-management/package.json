@@ -43,6 +43,7 @@
     "cookie-parser": "^1.4.7",
     "dotenv": "^16.5.0",
     "joi": "^17.13.3",
+    "ms-nestjs-eureka": "^1.0.2",
     "nest-winston": "^1.10.2",
     "nestjs-pino": "^4.4.0",
     "passport": "^0.7.0",

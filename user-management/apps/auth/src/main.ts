@@ -34,6 +34,6 @@ async function bootstrap() {
 
   await app.startAllMicroservices();
 
-  await app.listen(conifgService.getOrThrow('HTTTP_PORT'));
+  await app.listen(conifgService.getOrThrow('HTTP_PORT'));
 }
 bootstrap();

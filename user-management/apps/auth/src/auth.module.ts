@@ -5,13 +5,14 @@ import { UsersModule } from './users/users.module';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { LoggerModule } from 'nestjs-pino';
-import { APP_GUARD, APP_INTERCEPTOR,  } from '@nestjs/core';
+import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { JwtAuthGuard, RolesGuard } from '@app/common/auth';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { SERVICE } from '@app/common/constants/services';
 import { HttpModule } from '@nestjs/axios';
-import { PrometheusModule } from "@willsoto/nestjs-prometheus";
+import { PrometheusModule } from '@willsoto/nestjs-prometheus';
 import { LoggingInterceptor } from './Logging/logging.interceptor';
+import { EurekaModule } from 'ms-nestjs-eureka';
 
 @Module({
   imports: [
@@ -55,7 +56,22 @@ import { LoggingInterceptor } from './Logging/logging.interceptor';
       defaultMetrics: {
         enabled: true,
       },
-    })
+    }),
+
+    EurekaModule.forRoot({
+      eureka: {
+        host: 'localhost',
+        port: 8761,
+        registryFetchInterval: 1000,
+        servicePath: '/eureka/apps/',
+        maxRetries: 3,
+        //debug: true
+      },
+      service: {
+        name: 'user_management',
+        port: 4000,
+      },
+    }),
   ],
   providers: [
     AuthService,
@@ -69,8 +85,8 @@ import { LoggingInterceptor } from './Logging/logging.interceptor';
     },
     {
       provide: APP_INTERCEPTOR,
-      useClass: LoggingInterceptor
-    }
+      useClass: LoggingInterceptor,
+    },
   ],
   controllers: [AuthController],
 })
