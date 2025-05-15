@@ -23,7 +23,7 @@ Under each route, you will find details such as what is the body or the param ne
 ### Usage Flow
 - register
 - then test the rest of the API ops. 
-
+- NOTE: User CRUD ops are protected. Only user with Role: "city_planner" can access them.
 ## 4. Within the scope of this microservice and for testing purposes: 
 
 ### Exist the Nestjs app and the Grafana Tools under the following URLS :
