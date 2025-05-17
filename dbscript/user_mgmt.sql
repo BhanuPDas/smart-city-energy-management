@@ -1,0 +1,11 @@
+CREATE SCHEMA IF NOT EXISTS user_mgmt;
+CREATE TABLE IF NOT EXISTS user_mgmt.users
+(
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(20) NOT NULL,
+    email VARCHAR(35) NOT NULL UNIQUE,
+    phone VARCHAR(15),
+    role VARCHAR(14) NOT NULL,
+    password VARCHAR(15) NOT NULL
+);
+COMMIT;
