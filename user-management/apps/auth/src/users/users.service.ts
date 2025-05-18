@@ -30,7 +30,7 @@ export class UsersService {
       if (err instanceof QueryFailedError && (err as any).code === '23505') {
         throw new ConflictException('Email is already in use');
       }
-      throw new InternalServerErrorException();
+      throw new InternalServerErrorException(err);
     }
   }
 

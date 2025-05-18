@@ -5,7 +5,7 @@ import databaseConfig from './database.config';
 import { validationSchema } from './validation.schema';
 
 @Module({
-    imports: [
+  imports: [
     NestConfigModule.forRoot({
       envFilePath: [path.resolve(process.cwd(), '.env')],
       isGlobal: true,
@@ -13,8 +13,6 @@ import { validationSchema } from './validation.schema';
       load: [databaseConfig],
       validationSchema: validationSchema,
     }),
-
-   
   ],
 })
 export class ConfigModule {}

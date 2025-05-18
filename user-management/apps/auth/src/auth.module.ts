@@ -6,16 +6,18 @@ import { JwtModule } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { LoggerModule } from 'nestjs-pino';
 import { APP_GUARD } from '@nestjs/core';
-import { JwtAuthGuard, RolesGuard } from '@app/common/auth';
+import { JwtAuthGuard } from '@app/common/auth';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { SERVICE } from '@app/common/constants/services';
 import { HttpModule } from '@nestjs/axios';
 import { PrometheusModule } from '@willsoto/nestjs-prometheus';
 import { EurekaClientModule } from './eureka-client/eureka-client.module';
+import { DatabaseModule } from '@app/common';
 
 @Module({
   imports: [
     UsersModule,
+    DatabaseModule,
     JwtModule.registerAsync({
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
@@ -37,8 +39,8 @@ import { EurekaClientModule } from './eureka-client/eureka-client.module';
                 target: 'pino-loki',
                 options: {
                   host: configService.getOrThrow<string>('LOKI_URL'),
-                  labels: { app: 'auth-service', env: 'development' }, 
-                  batching: true, 
+                  labels: { app: 'auth-service', env: 'development' },
+                  batching: true,
                   interval: 5,
                 },
               },
@@ -108,10 +110,6 @@ import { EurekaClientModule } from './eureka-client/eureka-client.module';
     {
       provide: APP_GUARD,
       useClass: JwtAuthGuard, // globally enforce JWT
-    },
-    {
-      provide: APP_GUARD,
-      useClass: RolesGuard, // globally enforce roles when @Roles() used
     },
   ],
   controllers: [AuthController],

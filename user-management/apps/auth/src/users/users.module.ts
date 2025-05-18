@@ -8,7 +8,7 @@ import { LocalStrategy } from '../strategies/local.strategy';
 import { JwtStrategy } from '../strategies/jwt.strategy';
 
 @Module({
-  imports: [ConfigModule, DatabaseModule, DatabaseModule.forFeature([User])],
+  imports: [DatabaseModule.forFeature([User])],
   controllers: [UsersController],
   providers: [UsersService, UsersRepository, LocalStrategy, JwtStrategy],
 })

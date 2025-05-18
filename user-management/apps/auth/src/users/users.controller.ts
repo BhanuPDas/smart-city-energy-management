@@ -14,10 +14,8 @@ import { User } from './entities/user.entity';
 import { Long } from 'typeorm';
 import { UpdateUserDTO } from './DTO/update-user.dto';
 import { JwtAuthGuard } from '../guards/jwt.-auth.guard';
-import { Roles, RolesGuard } from '@app/common/auth';
 import {
   Public,
-  Role,
   SwaggerCreateUSER,
   SwaggerDeleteUser,
   SwaggerGetAllUsers,
@@ -38,32 +36,28 @@ export class UsersController {
   }
 
   @Get()
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(Role.CITY_PLANNER)
+  @UseGuards(JwtAuthGuard)
   @SwaggerGetAllUsers(User)
   async findAll(): Promise<User[]> {
     return await this.usersService.findAll();
   }
 
   @Get('/email/:email')
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(Role.CITY_PLANNER)
+  @UseGuards(JwtAuthGuard)
   @SwaggerGetUserByEmail(User)
   async findOne(@Param('email') email: string): Promise<User> {
     return await this.usersService.findOne(email);
   }
 
   @Get('/id/:id')
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(Role.CITY_PLANNER)
+  @UseGuards(JwtAuthGuard)
   @SwaggerGetUserById(User)
   async findOneById(@Param('id') id: Long): Promise<User> {
     return await this.usersService.findOneById(id);
   }
 
   @Put('/id/:id')
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(Role.CITY_PLANNER)
+  @UseGuards(JwtAuthGuard)
   @SwaggerUpdateUser(User)
   async findOneAndUpdate(
     @Param('id') id: Long,
@@ -73,8 +67,7 @@ export class UsersController {
   }
 
   @Delete('/id/:id')
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(Role.CITY_PLANNER)
+  @UseGuards(JwtAuthGuard)
   @SwaggerDeleteUser(User)
   async findOneAndDelete(@Param('id') id: Long): Promise<string> {
     return await this.usersService.findOneAndDelete(id);
