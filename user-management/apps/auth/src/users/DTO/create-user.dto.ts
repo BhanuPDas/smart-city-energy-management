@@ -1,6 +1,5 @@
-import { Role } from '@app/common';
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEnum, IsNotEmpty, IsString } from 'class-validator';
+import { IsNotEmpty, IsString } from 'class-validator';
 
 export class CreateUserDTO {
   @IsString()
@@ -21,11 +20,19 @@ export class CreateUserDTO {
 
   @IsString()
   @IsNotEmpty()
-    @ApiProperty({
+  @ApiProperty({
     example: '123456789',
     description: 'Phone# of the user',
   })
-  telephoneNo: string;
+  phone: string;
+
+  @IsString()
+  @IsNotEmpty()
+  @ApiProperty({
+    example: 'citizen or city_planner',
+    description: 'Role of user. make sure its lowercase',
+  })
+  role: string;
 
   @IsString()
   @IsNotEmpty()
@@ -34,12 +41,4 @@ export class CreateUserDTO {
     description: 'Secure password',
   })
   password: string;
-
-  @IsEnum(Role)
-  @IsNotEmpty()
-    @ApiProperty({
-    example: 'citizen or city_planner',
-    description: 'Role of user. make sure its lowercase',
-  })
-  role: Role;
 }
