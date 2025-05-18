@@ -56,20 +56,20 @@ export class UsersController {
     return await this.usersService.findOneById(id);
   }
 
-  @Put('/id/:id')
-  @UseGuards(JwtAuthGuard)
-  @SwaggerUpdateUser(User)
-  async findOneAndUpdate(
-    @Param('id') id: Long,
-    @Body() updateUserDto: UpdateUserDTO,
-  ): Promise<User> {
-    return await this.usersService.findOneAndUpdate(id, updateUserDto);
-  }
+  // @Put('/id/:id')
+  // @UseGuards(JwtAuthGuard)
+  // @SwaggerUpdateUser(User)
+  // async findOneAndUpdate(
+  //   @Param('id') id: Long,
+  //   @Body() updateUserDto: UpdateUserDTO,
+  // ): Promise<User> {
+  //   return await this.usersService.findOneAndUpdate(id, updateUserDto);
+  // }
 
-  @Delete('/id/:id')
-  @UseGuards(JwtAuthGuard)
-  @SwaggerDeleteUser(User)
-  async findOneAndDelete(@Param('id') id: Long): Promise<string> {
-    return await this.usersService.findOneAndDelete(id);
-  }
+  // @Delete('/id/:id')
+  // @UseGuards(JwtAuthGuard)
+  // @SwaggerDeleteUser(User)
+  // async findOneAndDelete(@Param('id') id: Long): Promise<string> {
+  //   return await this.usersService.findOneAndDelete(id);
+  // }
 }

@@ -15,7 +15,7 @@ import * as bcrypt from 'bcryptjs';
 export class UsersService {
   constructor(private readonly userRepository: UsersRepository) {}
 
-    async hashPassword(password: string): Promise<string> {
+  async hashPassword(password: string): Promise<string> {
     const hashedPassword = await bcrypt.hash(password, 10);
     return hashedPassword;
   }
@@ -46,19 +46,7 @@ export class UsersService {
     return await this.userRepository.findOne({ userId });
   }
 
-  async findOneAndUpdate(
-    userId: Long,
-    updateUserDto: UpdateUserDTO,
-  ): Promise<User> {
-    return await this.userRepository.findOneAndUpdate({userId}, updateUserDto);
-  }
-
-  async findOneAndDelete(userId: Long): Promise<string> {
-    return await this.userRepository.findOneAndDelete({ userId });
-  }
-
-  
-    async verifyUser(email: string, password: string): Promise<User> {
+  async verifyUser(email: string, password: string): Promise<User> {
     const user = await this.userRepository.findOne({ email });
 
     const passwordIsValid = await bcrypt.compare(password, user.password);
@@ -68,5 +56,18 @@ export class UsersService {
 
     return user;
   }
-  
+
+  // async findOneAndUpdate(
+  //   userId: Long,
+  //   updateUserDto: UpdateUserDTO,
+  // ): Promise<User> {
+  //   return await this.userRepository.findOneAndUpdate(
+  //     { userId },
+  //     updateUserDto,
+  //   );
+  // }
+
+  // async findOneAndDelete(userId: Long): Promise<string> {
+  //   return await this.userRepository.findOneAndDelete({ userId });
+  // }
 }
