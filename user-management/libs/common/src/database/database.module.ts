@@ -1,7 +1,8 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { typeOrmConfig } from '../config/typeorm.config';
+import { ConfigModule } from '../config';
 
 @Module({
   imports: [
@@ -13,7 +14,7 @@ import { typeOrmConfig } from '../config/typeorm.config';
   ],
 })
 export class DatabaseModule {
-  static forFeature(entities: any[]){
+  static forFeature(entities: any[]) {
     return TypeOrmModule.forFeature(entities);
   }
 }
