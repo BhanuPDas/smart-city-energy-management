@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS rbh_mgmt.energy_details
 (
     id SERIAL PRIMARY KEY ,
     building_id integer NOT NULL,
-    energy_type character varying(14) NOT NULL,
+    energy_type character varying(14),
     start_date date,
     end_date date,
     units_consumed integer,

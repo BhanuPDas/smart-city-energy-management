@@ -58,54 +58,54 @@
 </head>
 
 <body>
+	<div class="p-3 mb-2 bg-secondary-subtle text-secondary-emphasis">
+		<div class="centered-form">
+			<h2 style="text-align: center;">User Registration</h2>
 
-	<div class="centered-form">
-		<h2 style="text-align: center;">User Registration</h2>
+			<form th:action="@{/api/v1/register}" th:object="${user}" method="post">
+				<table>
+					<tr>
+						<td><label for="name">Name <span class="required">*</span></label></td>
+						<td><input type="text" id="name" th:field="*{name}" maxlength="20" required /></td>
+						<div class="text-danger" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+					</tr>
+					<tr>
+						<td><label for="email">Email <span class="required">*</span></label></td>
+						<td><input type="email" id="email" th:field="*{email}" maxlength="35" required /></td>
+						<div class="text-danger" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+					</tr>
+					<tr>
+						<td><label for="phone">Phone Number</label></td>
+						<td><input type="tel" id="phone" th:field="*{phone}" /></td>
+					</tr>
+					<tr>
+						<td><label for="password">Password<span class="required">*</span></label></td>
+						<td><input type="password" id="password" maxlength="15" th:field="*{password}" required /></td>
+						<div class="text-danger" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></div>
+					</tr>
+					<tr>
+						<td><label>Role <span class="required">*</span></label></td>
+						<td>
+							<input type="radio" id="planner" name="role" value="city_planner" th:field="*{role}"
+								required />
+							<label for="planner">City Planner</label><br />
+							<input type="radio" id="citizen" name="role" value="citizen" th:field="*{role}" required />
+							<label for="citizen">Citizen</label>
+						</td>
+						<div class="text-danger" th:if="${#fields.hasErrors('role')}" th:errors="*{role}"></div>
+					</tr>
+				</table>
 
-		<form th:action="@{/api/v1/register}" th:object="${user}" method="post">
-			<table>
-				<tr>
-					<td><label for="name">Name <span class="required">*</span></label></td>
-					<td><input type="text" id="name" th:field="*{name}" maxlength="20" required /></td>
-					<div class="text-danger" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
-				</tr>
-				<tr>
-					<td><label for="email">Email <span class="required">*</span></label></td>
-					<td><input type="email" id="email" th:field="*{email}" maxlength="35" required /></td>
-					<div class="text-danger" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
-				</tr>
-				<tr>
-					<td><label for="phone">Phone Number</label></td>
-					<td><input type="tel" id="phone" th:field="*{phone}" /></td>
-				</tr>
-				<tr>
-					<td><label for="password">Password<span class="required">*</span></label></td>
-					<td><input type="password" id="password" maxlength="15" th:field="*{password}" required /></td>
-					<div class="text-danger" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></div>
-				</tr>
-				<tr>
-					<td><label>Role <span class="required">*</span></label></td>
-					<td>
-						<input type="radio" id="planner" name="role" value="city_planners" th:field="*{role}"
-							required />
-						<label for="planner">City Planner</label><br />
-						<input type="radio" id="citizen" name="role" value="citizens" th:field="*{role}" required />
-						<label for="citizen">Citizen</label>
-					</td>
-					<div class="text-danger" th:if="${#fields.hasErrors('role')}" th:errors="*{role}"></div>
-				</tr>
-			</table>
+				<div class="actions">
+					<button type="submit" class="btn btn-secondary">Register</button>
+				</div>
+			</form>
 
-			<div class="actions">
-				<button type="submit" class="btn btn-secondary">Register</button>
+			<div class="login-link">
+				<p>Already have an account? <a th:href="@{/login}">Login</a></p>
 			</div>
-		</form>
-
-		<div class="login-link">
-			<p>Already have an account? <a th:href="@{/login}">Login</a></p>
 		</div>
 	</div>
-
 </body>
 
 </html>
