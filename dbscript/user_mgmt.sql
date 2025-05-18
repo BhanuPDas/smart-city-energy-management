@@ -6,6 +6,6 @@ CREATE TABLE IF NOT EXISTS user_mgmt.users
     email VARCHAR(35) NOT NULL UNIQUE,
     phone VARCHAR(15),
     role VARCHAR(14) NOT NULL,
-    password VARCHAR(15) NOT NULL
+    password VARCHAR(150) NOT NULL
 );
 COMMIT;
