@@ -107,10 +107,10 @@ import { DatabaseModule } from '@app/common';
   ],
   providers: [
     AuthService,
-    {
-      provide: APP_GUARD,
-      useClass: JwtAuthGuard, // globally enforce JWT
-    },
+    // {
+    //   provide: APP_GUARD,
+    //   useClass: JwtAuthGuard, // globally enforce JWT
+    // },
   ],
   controllers: [AuthController],
 })

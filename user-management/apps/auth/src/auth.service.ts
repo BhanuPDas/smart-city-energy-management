@@ -1,8 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { User } from './users/entities/user.entity';
-import { Response } from 'express';
+import { Request, Response } from 'express';
 import { JwtPayload } from './jwt-payload.interface';
 
 @Injectable()
@@ -32,12 +32,40 @@ export class AuthService {
       httpOnly: true,
       expires: expiresIn,
     });
+
+    const { password, ...safeUser } = user;
+    return {
+      access_token: accessToken,
+      user: safeUser,
+    };
   }
 
-  logout(response: Response) {
-    response.cookie('Authentication', '', {
-      httpOnly: true,
-      expires: new Date(),
-    });
+  verify(req: Request) {
+    const token =
+      (req.cookies && req.cookies.Authentication) ||
+      req.headers['authentication'];
+
+    if (!token) {
+      throw new HttpException({ status: 'expired' }, HttpStatus.UNAUTHORIZED);
+    }
+
+    try {
+      this.jwtService.verify(token, {
+        secret: this.configService.getOrThrow('JWT_SECRET'),
+      });
+      return { status: 'alive' };
+    } catch (err) {
+      if (err.name === 'TokenExpiredError') {
+      throw new HttpException({ status: 'expired' }, HttpStatus.UNAUTHORIZED);
+      }
+      throw new UnauthorizedException(err.message);
+    }
   }
+
+  // logout(response: Response) {
+  //   response.cookie('Authentication', '', {
+  //     httpOnly: true,
+  //     expires: new Date(),
+  //   });
+  // }
 }
