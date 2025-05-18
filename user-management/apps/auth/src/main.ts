@@ -17,7 +17,7 @@ async function bootstrap() {
     transport: Transport.TCP,
     options: {
       port: conifgService.getOrThrow('TCP_PORT'),
-      host: 'localhost',
+      host: conifgService.getOrThrow('SERVICE_HOST'),
     },
   });
   app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
