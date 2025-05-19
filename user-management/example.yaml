@@ -1,0 +1,36 @@
+version: '3.8'
+services:
+  loki:
+    image: grafana/loki
+    ports:
+      - '3100:3100'
+    command: -config.file=/etc/loki/local-config.yaml
+    networks:
+      - logging
+
+  prometheus:
+    image: prom/prometheus
+    ports:
+      - '9090:9090'
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    networks:
+      - logging
+
+  grafana:
+    image: grafana/grafana
+    ports:
+      - '3000:3000'
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      # point Grafana at our Prometheus container by its Docker network alias
+      - GF_INSTALL_PLUGINS=grafana-clock-panel,grafana-piechart-panel
+    depends_on:
+      - loki
+      - prometheus
+    networks:
+      - logging
+
+networks:
+  logging:
+    driver: bridge
