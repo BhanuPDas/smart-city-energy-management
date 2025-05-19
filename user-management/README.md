@@ -6,9 +6,8 @@ Version 1
 
 This User Management microservice is responsible for user related operations such as: 
 <br/>
-Registration, GET all users, GET user by email, GET user by ID, UPDATE user by ID, DELETE user by ID. <br/> <br/>
-Login, Logout <br/>
-Verify the incoming HTTP requests and attach user to them.<br/>
+Registration, GET all users, GET user by email, GET user by ID, Login <br/>
+And verify the incoming HTTP requests and attach user to them.<br/>
 
 ## 2. Quick Start
 Run the service: <br/>
@@ -23,7 +22,6 @@ Under each route, you will find details such as what is the body or the param ne
 ### Usage Flow
 - register
 - then test the rest of the API ops. 
-- NOTE: User CRUD ops are protected. Only user with Role: "city_planner" can access them.
 ## 4. Within the scope of this microservice and for testing purposes: 
 
 ### Exist the Nestjs app and the Grafana Tools under the following URLS :
