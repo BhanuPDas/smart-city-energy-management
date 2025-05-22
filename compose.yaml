@@ -1,7 +1,6 @@
 services:
   db:
     image: postgres:17.5
-    container_name: db
     environment:
       - POSTGRES_USER=admin
       - POSTGRES_PASSWORD=password
@@ -13,12 +12,14 @@ services:
       - pgdata:/var/lib/postgresql/data
   eureka_server:
     image: bhanupdas/eureka_server:latest
-    container_name: eureka_server
     ports:
       - "8761:8761"
   user_management_service:
-    image: bhanupdas/user_management_service:latest
-    container_name: user_management_service
+    build:
+      context: ./user-management
+      dockerfile: ./apps/auth/Dockerfile
+      target: development
+    command: npm run start:dev auth
     environment:
       - DB_HOST=db
       - DB_PORT=5432
@@ -43,7 +44,7 @@ services:
       - db
       - eureka_server
     volumes:
-      - .:/usr/src/app
+      - ./user-management:/usr/src/app
       - node_modules:/usr/src/app/node_modules
   loki:
     image: grafana/loki
