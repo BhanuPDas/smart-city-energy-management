@@ -8,9 +8,9 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
+import de.fhdo.city_mgmt_service.domain.request.UserLoginRequest;
 import de.fhdo.city_mgmt_service.domain.request.UserRegistrationRequest;
+import de.fhdo.city_mgmt_service.dto.UserLoginDTO;
 import de.fhdo.city_mgmt_service.dto.UserRegistrationDTO;
 import de.fhdo.city_mgmt_service.service.CityMgmtService;
 import jakarta.validation.Valid;
@@ -32,14 +32,34 @@ public class CityMgmtController {
 				user.getRole(), user.getPassword());
 		try {
 			String status = service.registerUser(request);
-			if(status.equalsIgnoreCase("success")) {
-			model.addAttribute("user", new UserRegistrationDTO());
-			model.addAttribute("msg", "Successfully Registered. Please Login.");
-			return "register";
+			if (status.equalsIgnoreCase("success")) {
+				model.addAttribute("user", new UserRegistrationDTO());
+				model.addAttribute("msg", "Successfully Registered. Please Login.");
+				return "register";
 			} else {
 				model.addAttribute("user", new UserRegistrationDTO());
 				model.addAttribute("msg", "Registration Failed, Please Try Again.");
 				return "register";
+			}
+		} catch (Exception e) {
+			model.addAttribute("msg", "Application has encountered some issue, please login later.");
+			return "app_error";
+		}
+	}
+
+	@PostMapping("/login")
+	public String loginUser(@Valid @ModelAttribute("user") UserLoginDTO user, Model model) {
+		UserLoginRequest request = new UserLoginRequest(user.getEmail(), user.getPassword());
+		try {
+			String status = service.loginUser(request);
+			if (status.equalsIgnoreCase("city_planner")) {
+				return "welcome_city_planner";
+			} else if (status.equalsIgnoreCase("citizen")) {
+				return "welcome_citizen";
+			} else {
+				model.addAttribute("user", new UserLoginDTO());
+				model.addAttribute("msg", "User Not Found.");
+				return "login";
 			}
 		} catch (Exception e) {
 			model.addAttribute("msg", "Application has encountered some issue, please login later.");

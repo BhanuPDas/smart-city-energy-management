@@ -64,7 +64,7 @@
 						<td><input type="password" id="password" maxlength="15" th:field="*{password}" required /></td>
 					</tr>
 				</table>
-				<div class="text-danger" th:if="${user.error}" th:text="${user.error}"></div>
+				<div class="p-3 text-primary-emphasis bg-primary-subtle border border-primary-subtle rounded-3" th:if="${msg}" th:text="${msg}"></div>
 
 				<div class="actions">
 					<button type="submit" class="btn btn-secondary">Login</button>
