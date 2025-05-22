@@ -1,0 +1,9 @@
+package de.fhdo.city_mgmt_service.service;
+
+import de.fhdo.city_mgmt_service.domain.request.UserRegistrationRequest;
+
+public interface CityMgmtService {
+
+	public String registerUser(UserRegistrationRequest request) throws Exception;;
+
+}

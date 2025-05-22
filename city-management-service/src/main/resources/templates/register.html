@@ -66,13 +66,13 @@
 				<table>
 					<tr>
 						<td><label for="name">Name <span class="required">*</span></label></td>
-						<td><input type="text" id="name" th:field="*{name}" maxlength="20" required /></td>
-						<div class="text-danger" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+						<td><input type="text" id="name" th:field="*{name}" maxlength="20" required />
+						<div class="text-danger" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div></td>
 					</tr>
 					<tr>
 						<td><label for="email">Email <span class="required">*</span></label></td>
-						<td><input type="email" id="email" th:field="*{email}" maxlength="35" required /></td>
-						<div class="text-danger" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+						<td><input type="email" id="email" th:field="*{email}" maxlength="35" required />
+						<div class="text-danger" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div></td>
 					</tr>
 					<tr>
 						<td><label for="phone">Phone Number</label></td>
@@ -80,8 +80,8 @@
 					</tr>
 					<tr>
 						<td><label for="password">Password<span class="required">*</span></label></td>
-						<td><input type="password" id="password" maxlength="15" th:field="*{password}" required /></td>
-						<div class="text-danger" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></div>
+						<td><input type="password" id="password" maxlength="15" th:field="*{password}" required />
+						<div class="text-danger" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></div></td>
 					</tr>
 					<tr>
 						<td><label>Role <span class="required">*</span></label></td>
@@ -91,8 +91,8 @@
 							<label for="planner">City Planner</label><br />
 							<input type="radio" id="citizen" name="role" value="citizen" th:field="*{role}" required />
 							<label for="citizen">Citizen</label>
-						</td>
-						<div class="text-danger" th:if="${#fields.hasErrors('role')}" th:errors="*{role}"></div>
+						
+						<div class="text-danger" th:if="${#fields.hasErrors('role')}" th:errors="*{role}"></div></td>
 					</tr>
 				</table>
 
@@ -105,6 +105,10 @@
 				<p>Already have an account? <a th:href="@{/login}">Login</a></p>
 			</div>
 		</div>
+	</div>
+	<div th:if="${msg}">
+		<div class="p-3 text-primary-emphasis bg-primary-subtle border border-primary-subtle rounded-3"
+			th:text="${msg}" />
 	</div>
 </body>
 

@@ -22,7 +22,6 @@ public class CityMgmtConfig {
 	}
 
 	@Bean(autowireCandidate = true)
-	@Scope("singleton")
 	@LoadBalanced
 	RestTemplate createRestTemplate(RestTemplateBuilder builder) {
 		return builder.build();
