@@ -1,5 +1,7 @@
 package de.fhdo.city_mgmt_service.aspect.auth;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,10 +20,13 @@ import org.springframework.web.util.UriComponentsBuilder;
 import de.fhdo.city_mgmt_service.domain.response.TokenVerifyResponse;
 import de.fhdo.city_mgmt_service.dto.UserDataDTO;
 import de.fhdo.city_mgmt_service.exception.UserException;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 
 @Aspect
 @Component
 public class CityMgmtUserAuth {
+
+	private final Logger logger = LoggerFactory.getLogger(CityMgmtUserAuth.class);
 
 	@Value("${user_mgmt.url}")
 	private String user_mgmt_url;
@@ -32,7 +37,9 @@ public class CityMgmtUserAuth {
 	@Autowired
 	private UserToken token;
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@AfterReturning("execution(* de.fhdo.city_mgmt_service.service.impl.CityMgmtServiceImpl.loginUser(..))")
+	@CircuitBreaker(name = "tokenVerify")
 	public void verifyToken() throws UserException {
 
 		String url = UriComponentsBuilder.fromUriString(user_mgmt_url + "/v1/auth/verify").toUriString();
@@ -45,12 +52,14 @@ public class CityMgmtUserAuth {
 					TokenVerifyResponse.class);
 			if (resp.getBody() != null) {
 				String status = resp.getBody().getStatus();
-				System.out.println("After verification -- " + status);
+				logger.info("token status is:" + status);
 			}
 		} catch (HttpClientErrorException.Unauthorized e) {
+			logger.error("Exception while verifying token:" + e.getMessage());
 			removeUserData(token.getToken());
 			throw new UserException("Session Terminated. Please login Again. ");
 		} catch (Exception e) {
+			logger.error("Exception while verifying token:" + e.getMessage());
 			removeUserData(token.getToken());
 			throw new UserException("Application is facing some technical issue, try again later.");
 		}

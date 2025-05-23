@@ -1,5 +1,7 @@
 package de.fhdo.city_mgmt_service.service.impl;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -11,9 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import de.fhdo.city_mgmt_service.aspect.auth.CityMgmtUserAuth;
 import de.fhdo.city_mgmt_service.aspect.auth.UserToken;
 import de.fhdo.city_mgmt_service.constant.CityManagementConstants;
@@ -26,9 +26,12 @@ import de.fhdo.city_mgmt_service.dto.UserDataDTO;
 import de.fhdo.city_mgmt_service.exception.UserException;
 import de.fhdo.city_mgmt_service.repository.CityMgmtRepository;
 import de.fhdo.city_mgmt_service.service.CityMgmtService;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 
 @Service
 public class CityMgmtServiceImpl implements CityMgmtService {
+
+	private final Logger logger = LoggerFactory.getLogger(CityMgmtServiceImpl.class);
 
 	@Autowired
 	public RestTemplate rest;
@@ -48,6 +51,7 @@ public class CityMgmtServiceImpl implements CityMgmtService {
 	@Value("${user_mgmt.url}")
 	private String user_mgmt_url;
 
+	@CircuitBreaker(name = "register")
 	public String registerUser(UserRegistrationRequest request) throws UserException {
 		if (request != null) {
 			String url = UriComponentsBuilder.fromUriString(user_mgmt_url + "/v1/users/register").toUriString();
@@ -63,17 +67,21 @@ public class CityMgmtServiceImpl implements CityMgmtService {
 					repoEntity.setRequest(obj.writeValueAsString(request));
 					repoEntity.setResponse(obj.writeValueAsString(resp.getBody()));
 					repo.save(repoEntity);
+					logger.info("User:" + resp.getBody().getUserId() + "registered");
 					return "success";
 				}
 			} catch (HttpClientErrorException.BadRequest ex) {
+				logger.error("Exception for user:" + request.getEmail() + ex.getMessage());
 				return "failure";
 			} catch (Exception e) {
+				logger.error("Exception for user:" + request.getEmail() + e.getMessage());
 				throw new UserException("Exception occured during user registration. " + e.getMessage());
 			}
 		}
 		return "failure";
 	}
 
+	@CircuitBreaker(name = "login")
 	public String loginUser(UserLoginRequest request) throws UserException {
 		if (request != null) {
 			String url = UriComponentsBuilder.fromUriString(user_mgmt_url + "/v1/auth/login").toUriString();
@@ -97,14 +105,17 @@ public class CityMgmtServiceImpl implements CityMgmtService {
 					userdto.setPhone(resp.getBody().getUser().getPhone());
 					userdto.setRole(resp.getBody().getUser().getRole());
 					cache.fetchUserData(resp.getBody().getAccess_token(), userdto);
+					logger.info("Login successful for user" + resp.getBody().getUser().getUserId());
 					if (resp.getBody().getUser().getRole().equalsIgnoreCase("city_planner"))
 						return "city_planner";
 					else
 						return "citizen";
 				}
 			} catch (HttpClientErrorException.Unauthorized ex) {
+				logger.error("Login successful for user" + request.getEmail() + ex.getMessage());
 				return "failure";
 			} catch (Exception e) {
+				logger.error("Login successful for user" + request.getEmail() + e.getMessage());
 				throw new UserException("Exception occured during user login. " + e.getMessage());
 			}
 		}
