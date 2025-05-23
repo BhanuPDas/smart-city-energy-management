@@ -45,6 +45,16 @@ services:
     volumes:
       - .:/usr/src/app
       - node_modules:/usr/src/app/node_modules
+  ç:
+      build:
+        context: EnergyManagement
+        dockerfile: ./Dockerfile
+      depends_on:
+        - db
+      environment:
+        - DB_URL=jdbc:postgresql://db:5432/postgres
+        - DB_USERNAME=admin
+        - DB_PASSWORD=password
   loki:
     image: grafana/loki
     ports:
