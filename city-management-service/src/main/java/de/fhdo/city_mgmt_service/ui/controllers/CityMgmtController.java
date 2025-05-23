@@ -12,19 +12,26 @@ import de.fhdo.city_mgmt_service.domain.request.UserLoginRequest;
 import de.fhdo.city_mgmt_service.domain.request.UserRegistrationRequest;
 import de.fhdo.city_mgmt_service.dto.UserLoginDTO;
 import de.fhdo.city_mgmt_service.dto.UserRegistrationDTO;
+import de.fhdo.city_mgmt_service.exception.UserException;
 import de.fhdo.city_mgmt_service.service.CityMgmtService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
 @Controller
 @RequestMapping("/api/v1")
+@Tag(name = "City Management Controller", description = "APIs for City Management")
 public class CityMgmtController {
 
 	@Autowired
 	private CityMgmtService service;
 
 	@PostMapping("/register")
+	@Operation(summary = "Registration")
+	@ApiResponse(responseCode = "200", description = "Registration Successfull")
 	public String registerUser(@Valid @ModelAttribute("user") UserRegistrationDTO user, BindingResult result,
-			Model model) {
+			Model model) throws UserException {
 		if (result.hasErrors()) {
 			return "register";
 		}
@@ -42,13 +49,14 @@ public class CityMgmtController {
 				return "register";
 			}
 		} catch (Exception e) {
-			model.addAttribute("msg", "Application has encountered some issue, please login later.");
-			return "app_error";
+			throw new UserException("Application has encountered some issue, please register later.");
 		}
 	}
 
 	@PostMapping("/login")
-	public String loginUser(@Valid @ModelAttribute("user") UserLoginDTO user, Model model) {
+	@Operation(summary = "Login")
+	@ApiResponse(responseCode = "200", description = "Login Successfull")
+	public String loginUser(@Valid @ModelAttribute("user") UserLoginDTO user, Model model) throws UserException {
 		UserLoginRequest request = new UserLoginRequest(user.getEmail(), user.getPassword());
 		try {
 			String status = service.loginUser(request);
@@ -62,8 +70,7 @@ public class CityMgmtController {
 				return "login";
 			}
 		} catch (Exception e) {
-			model.addAttribute("msg", "Application has encountered some issue, please login later.");
-			return "app_error";
+			throw new UserException("Application has encountered some issue, please login later.");
 		}
 	}
 }

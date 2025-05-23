@@ -41,14 +41,13 @@ export class AuthService {
   }
 
   verify(req: Request) {
-    const token =
-      (req.cookies && req.cookies.Authentication) ||
-      req.headers['authentication'];
+    const authHeader = req.headers['authorization'];
 
-    if (!token) {
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
       throw new HttpException({ status: 'expired' }, HttpStatus.UNAUTHORIZED);
     }
-
+    
+    const token = authHeader.substring(7);
     try {
       this.jwtService.verify(token, {
         secret: this.configService.getOrThrow('JWT_SECRET'),

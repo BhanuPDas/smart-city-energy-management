@@ -14,7 +14,8 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import de.fhdo.city_mgmt_service.cache.CityMgmtUserCache;
+import de.fhdo.city_mgmt_service.aspect.auth.CityMgmtUserAuth;
+import de.fhdo.city_mgmt_service.aspect.auth.UserToken;
 import de.fhdo.city_mgmt_service.constant.CityManagementConstants;
 import de.fhdo.city_mgmt_service.domain.entity.CityMgmtEntity;
 import de.fhdo.city_mgmt_service.domain.request.UserLoginRequest;
@@ -39,7 +40,10 @@ public class CityMgmtServiceImpl implements CityMgmtService {
 	private CityMgmtRepository repo;
 
 	@Autowired
-	private CityMgmtUserCache cache;
+	private CityMgmtUserAuth cache;
+
+	@Autowired
+	private UserToken token;
 
 	@Value("${user_mgmt.url}")
 	private String user_mgmt_url;
@@ -85,14 +89,14 @@ public class CityMgmtServiceImpl implements CityMgmtService {
 					repoEntity.setRequest(obj.writeValueAsString(request));
 					repoEntity.setResponse(obj.writeValueAsString(resp.getBody()));
 					repo.save(repoEntity);
+					token.setToken(resp.getBody().getAccess_token());
 					UserDataDTO userdto = new UserDataDTO();
-					userdto.setAccess_token(resp.getBody().getAccess_token());
 					userdto.setUserId(resp.getBody().getUser().getUserId());
 					userdto.setEmail(resp.getBody().getUser().getEmail());
 					userdto.setName(resp.getBody().getUser().getName());
 					userdto.setPhone(resp.getBody().getUser().getPhone());
 					userdto.setRole(resp.getBody().getUser().getRole());
-					cache.userData(userdto);
+					cache.fetchUserData(resp.getBody().getAccess_token(), userdto);
 					if (resp.getBody().getUser().getRole().equalsIgnoreCase("city_planner"))
 						return "city_planner";
 					else
