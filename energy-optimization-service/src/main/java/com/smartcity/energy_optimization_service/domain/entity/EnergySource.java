@@ -1,4 +1,4 @@
-package com.smartcity.energy_optimization_service.model;
+package com.smartcity.energy_optimization_service.domain.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
