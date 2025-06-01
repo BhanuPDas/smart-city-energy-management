@@ -12,14 +12,14 @@ import lombok.NoArgsConstructor;
 @Table(name = "building", schema = "rbh_mgmt")
 public class BuildingEntity {
 
-    @Id
-    private Long id;
-    private String city;
-    private String address;
-    @Column(name = "zip_code")
-    private String zipCode;
-    @Column(name = "owner_email")
-    private String ownerEmail;
-    @Column(name = "floor_area")
-    private double floorArea;
+	@Id
+	private Long id;
+	private String city;
+	private String address;
+	@Column(name = "zip_code")
+	private String zipCode;
+	@Column(name = "owner_email")
+	private String ownerEmail;
+	@Column(name = "floor_area")
+	private double floorArea;
 }

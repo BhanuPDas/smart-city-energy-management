@@ -64,7 +64,7 @@ public class OptimizationServiceImpl implements OptimizationService {
 					// Rule 2: High consumption per m²/year
 					long days = ChronoUnit.DAYS.between(source.getStartDate(), source.getEndDate());
 					if (days == 0)
-						days = 1; // avoid division by zero
+						days = 1;
 					double annualizedConsumption = (source.getConsumption() / days) * 365;
 					double consumptionPerM2 = annualizedConsumption / building.getFloorArea();
 					if (consumptionPerM2 > EFFICIENCY_THRESHOLD) {
@@ -79,8 +79,7 @@ public class OptimizationServiceImpl implements OptimizationService {
 					}
 					// Rule 3: Suggest renewable energy
 					String energyName = type.getEnergyType().toLowerCase();
-					Set<String> renewableTypes = Set.of("solar", "heat pump"); // Updated to match your team's energy
-																				// types
+					Set<String> renewableTypes = Set.of("solar", "heat pump");
 					if (renewableTypes.stream().noneMatch(energyName::contains)) {
 						recommendations.append(
 								"  🌱 Switching to Solar or Heat Pump can save you money in the long run while helping the planet. It's a smart, sustainable choice! 🌍\n");

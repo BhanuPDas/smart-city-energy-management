@@ -16,7 +16,7 @@ public class OptimizationController {
 	private OptimizationService optimizationService;
 
 	@GetMapping(value = "/optimize")
-	public String getRecommendations(@RequestParam String ownerEmail) {
+	public String getRecommendations(@RequestParam("email") String ownerEmail) {
 		if (!ownerEmail.isBlank()) {
 			logger.info("Optimization Suggestion requested for: " + ownerEmail);
 			return optimizationService.generateRecommendation(ownerEmail);

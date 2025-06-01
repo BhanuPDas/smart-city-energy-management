@@ -12,17 +12,17 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class EnergySourceEntity {
 
-    @Id
-    private Long id;
-    private Integer consumption;
-    @Column(name = "start_date")
-    private LocalDate startDate;
-    @Column(name = "end_date")
-    private LocalDate endDate;
-    @ManyToOne
-    @JoinColumn(name = "building_id", referencedColumnName = "id")
-    private BuildingEntity building;
-    @ManyToOne
-    @JoinColumn(name = "energy_type_id", referencedColumnName = "id")
-    private EnergyTypeEntity energyType;
+	@Id
+	private Long id;
+	private Integer consumption;
+	@Column(name = "start_date")
+	private LocalDate startDate;
+	@Column(name = "end_date")
+	private LocalDate endDate;
+	@ManyToOne
+	@JoinColumn(name = "building_id", referencedColumnName = "id")
+	private BuildingEntity building;
+	@ManyToOne
+	@JoinColumn(name = "energy_type_id", referencedColumnName = "id")
+	private EnergyTypeEntity energyType;
 }

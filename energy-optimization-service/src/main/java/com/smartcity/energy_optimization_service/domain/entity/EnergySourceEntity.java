@@ -14,17 +14,17 @@ import java.time.LocalDate;
 @Table(name = "energy_source", schema = "rbh_mgmt")
 public class EnergySourceEntity {
 
-    @Id
-    private Long id;
-    @ManyToOne
-    @JoinColumn(name = "building_id", referencedColumnName = "id")
-    private BuildingEntity building;
-    @ManyToOne
-    @JoinColumn(name = "energy_type_id", referencedColumnName = "id")
-    private EnergyTypeEntity energyType;
-    @Column(name = "start_date")
-    private LocalDate startDate;
-    @Column(name = "end_date")
-    private LocalDate endDate;
-    private Integer consumption;
+	@Id
+	private Long id;
+	@ManyToOne
+	@JoinColumn(name = "building_id", referencedColumnName = "id")
+	private BuildingEntity building;
+	@ManyToOne
+	@JoinColumn(name = "energy_type_id", referencedColumnName = "id")
+	private EnergyTypeEntity energyType;
+	@Column(name = "start_date")
+	private LocalDate startDate;
+	@Column(name = "end_date")
+	private LocalDate endDate;
+	private Integer consumption;
 }

@@ -12,12 +12,12 @@ import lombok.NoArgsConstructor;
 @Table(name = "energy_type", schema = "rbh_mgmt")
 public class EnergyTypeEntity {
 
-    @Id
-    private Long id;
-    @Column(name = "name")
-    private String energyType;
-    private String unit;
-    private String provider;
-    @Column(name = "price_per_unit")
-    private double pricePerUnit;
+	@Id
+	private Long id;
+	@Column(name = "name")
+	private String energyType;
+	private String unit;
+	private String provider;
+	@Column(name = "price_per_unit")
+	private double pricePerUnit;
 }
