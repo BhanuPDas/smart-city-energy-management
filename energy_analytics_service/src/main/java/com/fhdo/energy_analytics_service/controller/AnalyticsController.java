@@ -1,7 +1,7 @@
 package com.fhdo.energy_analytics_service.controller;
 
 import com.fhdo.energy_analytics_service.domain.entity.BuildingEntity;
-import com.fhdo.energy_analytics_service.service.impl.AnalyticsServiceImpl;
+import com.fhdo.energy_analytics_service.service.AnalyticsService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -10,30 +10,24 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/analytics/buildings")
+@RequestMapping("/api/v1/analytics")
 public class AnalyticsController {
 
-    private final AnalyticsServiceImpl buildingService;
+	@Autowired
+	private AnalyticsService service;
 
-    @Autowired
-    public AnalyticsController(AnalyticsServiceImpl buildingService) {
-        this.buildingService = buildingService;
-    }
+	@GetMapping("/by-email")
+	public ResponseEntity<BuildingEntity> getByEmail(@RequestParam String email) {
+		return service.getBuildingByEmail(email).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+	}
 
-    @GetMapping("/by-email")
-    public ResponseEntity<BuildingEntity> getByEmail(@RequestParam String email) {
-        return buildingService.getBuildingByEmail(email)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
-    }
+	@GetMapping("/by-zipcode")
+	public ResponseEntity<List<BuildingEntity>> getByZipCode(@RequestParam Integer zipCode) {
+		return ResponseEntity.ok(service.getBuildingsByZipCode(zipCode));
+	}
 
-    @GetMapping("/by-zipcode")
-    public ResponseEntity<List<BuildingEntity>> getByZipCode(@RequestParam Integer zipCode) {
-        return ResponseEntity.ok(buildingService.getBuildingsByZipCode(zipCode));
-    }
-
-    @GetMapping("/by-city")
-    public ResponseEntity<List<BuildingEntity>> getByCity(@RequestParam String city) {
-        return ResponseEntity.ok(buildingService.getBuildingsByCity(city));
-    }
+	@GetMapping("/by-city")
+	public ResponseEntity<List<BuildingEntity>> getByCity(@RequestParam String city) {
+		return ResponseEntity.ok(service.getBuildingsByCity(city));
+	}
 }

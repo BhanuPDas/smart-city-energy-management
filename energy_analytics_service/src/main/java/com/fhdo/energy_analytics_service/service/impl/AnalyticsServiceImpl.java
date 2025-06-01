@@ -2,6 +2,7 @@ package com.fhdo.energy_analytics_service.service.impl;
 
 import com.fhdo.energy_analytics_service.domain.entity.BuildingEntity;
 import com.fhdo.energy_analytics_service.repository.BuildingRepository;
+import com.fhdo.energy_analytics_service.service.AnalyticsService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,24 +11,20 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class AnalyticsServiceImpl {
+public class AnalyticsServiceImpl implements AnalyticsService {
 
-    private final BuildingRepository buildingRepository;
+	@Autowired
+	private BuildingRepository repo;
 
-    @Autowired
-    public AnalyticsServiceImpl(BuildingRepository buildingRepository) {
-        this.buildingRepository = buildingRepository;
-    }
+	public Optional<BuildingEntity> getBuildingByEmail(String email) {
+		return repo.findByOwnerEmail(email);
+	}
 
-    public Optional<BuildingEntity> getBuildingByEmail(String email) {
-        return buildingRepository.findByOwnerEmail(email);
-    }
+	public List<BuildingEntity> getBuildingsByZipCode(Integer zipCode) {
+		return repo.findByZipCode(zipCode);
+	}
 
-    public List<BuildingEntity> getBuildingsByZipCode(Integer zipCode) {
-        return buildingRepository.findByZipCode(zipCode);
-    }
-
-    public List<BuildingEntity> getBuildingsByCity(String city) {
-        return buildingRepository.findByCity(city);
-    }
+	public List<BuildingEntity> getBuildingsByCity(String city) {
+		return repo.findByCity(city);
+	}
 }

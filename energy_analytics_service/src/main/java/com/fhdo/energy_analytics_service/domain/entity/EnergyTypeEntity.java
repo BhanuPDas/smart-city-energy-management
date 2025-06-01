@@ -14,11 +14,9 @@ public class EnergyTypeEntity {
 
     @Id
     private Long id;
-
     private String name;
     private String provider;
     private String unit;
-
     @Column(name = "price_per_unit")
     private Integer pricePerUnit;
 }
