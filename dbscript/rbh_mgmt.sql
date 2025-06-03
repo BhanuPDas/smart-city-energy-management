@@ -2,15 +2,15 @@ CREATE SCHEMA IF NOT EXISTS rbh_mgmt;
 CREATE TABLE IF NOT EXISTS rbh_mgmt.energy_type
 (
     id bigint PRIMARY KEY,
-    price_per_unit integer,
+    price_per_unit real,
     name character varying(30),
     provider character varying(30),
     unit character varying(20)
 );
-INSERT INTO rbh_mgmt.energy_type(id, price_per_unit, name, provider, unit) VALUES (1, 100, 'solar', 'E-ON', 'm3');
-INSERT INTO rbh_mgmt.energy_type(id, price_per_unit, name, provider, unit) VALUES (2, 200, 'electricity', 'RWE', 'kwh');
-INSERT INTO rbh_mgmt.energy_type(id, price_per_unit, name, provider, unit) VALUES (3, 300, 'gas', 'DEW21', 'm3');
-INSERT INTO rbh_mgmt.energy_type(id, price_per_unit, name, provider, unit) VALUES (4, 400, 'heating-pump', 'octapus', 'm3');
+INSERT INTO rbh_mgmt.energy_type(id, price_per_unit, name, provider, unit) VALUES (1, 0.35, 'solar', 'E-ON', 'm3');
+INSERT INTO rbh_mgmt.energy_type(id, price_per_unit, name, provider, unit) VALUES (2, 0.45, 'electricity', 'RWE', 'kwh');
+INSERT INTO rbh_mgmt.energy_type(id, price_per_unit, name, provider, unit) VALUES (3, 0.75, 'gas', 'DEW21', 'm3');
+INSERT INTO rbh_mgmt.energy_type(id, price_per_unit, name, provider, unit) VALUES (4, 0.59, 'heating-pump', 'octapus', 'm3');
 
 
 CREATE TABLE IF NOT EXISTS rbh_mgmt.building

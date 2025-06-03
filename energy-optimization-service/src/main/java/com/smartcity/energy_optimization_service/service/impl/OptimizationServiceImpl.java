@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.time.temporal.ChronoUnit;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 
@@ -42,50 +43,53 @@ public class OptimizationServiceImpl implements OptimizationService {
 			for (BuildingEntity building : buildings) {
 				recommendations.append("🏠 Building at ").append(building.getAddress()).append("\n");
 				List<EnergySourceEntity> sources = energySourceRepository.findByBuilding(building);
+				//Sort the list in descending order to take the latest energy source
+				sources.sort(Comparator.comparing(EnergySourceEntity::getId).reversed());
 				if (sources.isEmpty()) {
 					logger.info("No energy sources found");
 					recommendations.append("  - No energy sources found.\n\n");
 					continue;
 				}
-				for (EnergySourceEntity source : sources) {
-					EnergyTypeEntity type = source.getEnergyType();
-					double cost = source.getConsumption() * type.getPricePerUnit();
-					recommendations.append("  🔌 Energy type: ").append(type.getEnergyType()).append(", cost: €")
-							.append(String.format("%.2f", cost)).append("\n");
-					// Rule 1: Cheaper energy type available?
-					List<EnergyTypeEntity> allTypes = energyTypeRepository.findAll();
-					for (EnergyTypeEntity other : allTypes) {
-						if (!other.equals(type) && other.getPricePerUnit() < type.getPricePerUnit()) {
-							recommendations.append("  💡 Tip: Consider switching to ").append(other.getEnergyType())
-									.append(" (price: €").append(other.getPricePerUnit()).append("/unit).\n");
-							break;
-						}
+				// Calculate Based on the last known source (due to multiple sources)
+				EnergySourceEntity source = sources.getFirst();
+				EnergyTypeEntity type = source.getEnergyType();
+				double cost = source.getConsumption() * type.getPricePerUnit();
+				recommendations.append("  🔌 Energy type: ").append(type.getEnergyType()).append(", cost: €")
+						.append(String.format("%.2f", cost)).append("\n");
+				// Rule 1: Cheaper energy type available?
+				List<EnergyTypeEntity> allTypes = energyTypeRepository.findAll();
+				for (EnergyTypeEntity other : allTypes) {
+					if (!other.equals(type) && other.getPricePerUnit() < type.getPricePerUnit()) {
+						recommendations.append("  💡 Tip: Consider switching to ").append(other.getEnergyType())
+								.append(" (price: €").append(other.getPricePerUnit()).append("/unit).\n");
+						break;
 					}
-					// Rule 2: High consumption per m²/year
-					long days = ChronoUnit.DAYS.between(source.getStartDate(), source.getEndDate());
-					if (days == 0)
-						days = 1;
-					double annualizedConsumption = (source.getConsumption() / days) * 365;
-					double consumptionPerM2 = annualizedConsumption / building.getFloorArea();
-					if (consumptionPerM2 > EFFICIENCY_THRESHOLD) {
-						recommendations.append("  ⚠️ Your consumption is ")
-								.append(String.format("%.0f", consumptionPerM2)).append(" kWh/m²/year, which is ")
-								.append(String.format("%.0f", consumptionPerM2 - EFFICIENCY_THRESHOLD))
-								.append(" above the recommended level.\n");
-					} else {
-						// Rule 4: Congratulate if efficient
-						recommendations.append("  ✅ Good job! Your energy usage is efficient at ")
-								.append(String.format("%.0f", consumptionPerM2)).append(" kWh/m²/year.\n");
-					}
-					// Rule 3: Suggest renewable energy
-					String energyName = type.getEnergyType().toLowerCase();
-					Set<String> renewableTypes = Set.of("solar", "heat pump");
-					if (renewableTypes.stream().noneMatch(energyName::contains)) {
-						recommendations.append(
-								"  🌱 Switching to Solar or Heat Pump can save you money in the long run while helping the planet. It's a smart, sustainable choice! 🌍\n");
-					}
-					recommendations.append("\n");
 				}
+				// Rule 2: High consumption per m²/year
+				long days = ChronoUnit.DAYS.between(source.getStartDate(), source.getEndDate());
+				if (days == 0)
+					days = 1;
+				// Forecast for the year
+				double annualizedConsumption = (source.getConsumption() / days) * 365;
+				double consumptionPerM2 = annualizedConsumption / building.getFloorArea();
+				if (consumptionPerM2 > EFFICIENCY_THRESHOLD) {
+					recommendations.append("  ⚠️ Your consumption is ").append(String.format("%.0f", consumptionPerM2))
+							.append(" kWh/m²/year, which is ")
+							.append(String.format("%.0f", consumptionPerM2 - EFFICIENCY_THRESHOLD))
+							.append(" above the recommended level.\n");
+				} else {
+					// Rule 4: Congratulate if efficient
+					recommendations.append("  ✅ Good job! Your energy usage is efficient at ")
+							.append(String.format("%.0f", consumptionPerM2)).append(" kWh/m²/year.\n");
+				}
+				// Rule 3: Suggest renewable energy
+				String energyName = type.getEnergyType().toLowerCase();
+				Set<String> renewableTypes = Set.of("solar", "heat pump");
+				if (renewableTypes.stream().noneMatch(energyName::contains)) {
+					recommendations.append(
+							"  🌱 Switching to Solar or Heat Pump can save you money in the long run while helping the planet. It's a smart, sustainable choice! 🌍\n");
+				}
+				recommendations.append("\n");
 			}
 			return recommendations.toString();
 		} catch (Exception e) {

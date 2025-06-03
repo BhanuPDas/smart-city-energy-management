@@ -18,5 +18,5 @@ public class EnergyTypeEntity {
 	private String provider;
 	private String unit;
 	@Column(name = "price_per_unit")
-	private Integer pricePerUnit;
+	private double pricePerUnit;
 }
