@@ -1,7 +1,7 @@
 CREATE SCHEMA IF NOT EXISTS rbh_mgmt;
 CREATE TABLE IF NOT EXISTS rbh_mgmt.energy_type
 (
-    id bigint PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     price_per_unit real,
     name character varying(30),
     provider character varying(30),
@@ -15,18 +15,18 @@ INSERT INTO rbh_mgmt.energy_type(id, price_per_unit, name, provider, unit) VALUE
 
 CREATE TABLE IF NOT EXISTS rbh_mgmt.building
 (
-    id bigint PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     floor_area integer,
     zip_code integer,
     address character varying(50),
     city character varying(40),
-    owner_email character varying(35)
+    owner_email character varying(35) UNIQUE
 );
 CREATE TABLE IF NOT EXISTS rbh_mgmt.energy_source
 (
-    id bigint PRIMARY KEY,
-    building_id bigint NOT NULL,
-    energy_type_id bigint NOT NULL,
+    id SERIAL PRIMARY KEY,
+    building_id Integer NOT NULL,
+    energy_type_id Integer NOT NULL,
     consumption integer,
     start_date timestamp(6) without time zone,
     end_date timestamp(6) without time zone,
