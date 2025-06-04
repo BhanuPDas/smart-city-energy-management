@@ -1,0 +1,25 @@
+services:
+  db:
+    image: postgres:17.1-alpine
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=postgres
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - '5432:5432'
+  energy-mgmt:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - db
+    environment:
+      - DB_URL=jdbc:postgresql://db:5432/postgres
+      - DB_USERNAME=admin
+      - DB_PASSWORD=password
+    ports:
+      - '8500:8500'
+volumes:
+  pgdata:

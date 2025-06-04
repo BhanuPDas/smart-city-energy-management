@@ -41,7 +41,7 @@ public class BuildingEnergyController {
 					+ request.getAddress());
 			return ResponseEntity.ok(service.modifyBuildingEnergy(request));
 		} else {
-			logger.info("Empty Request received for adding building energy");
+			logger.info("Empty Request received for updating building energy");
 			return ResponseEntity.ok(null);
 		}
 	}

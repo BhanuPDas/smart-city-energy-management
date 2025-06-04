@@ -13,7 +13,9 @@ import de.fh.energymanagementservice.domain.entity.BuildingEntity;
 import de.fh.energymanagementservice.domain.entity.EnergySourceEntity;
 import de.fh.energymanagementservice.domain.entity.EnergyTypeEntity;
 import de.fh.energymanagementservice.domain.request.BuildingEnergyRequest;
+import de.fh.energymanagementservice.domain.request.EnergySourceRequest;
 import de.fh.energymanagementservice.domain.response.BuildingEnergyResponse;
+import de.fh.energymanagementservice.domain.response.EnergySourceResponse;
 import de.fh.energymanagementservice.repositories.BuildingRepository;
 import de.fh.energymanagementservice.repositories.EnergySourceRepository;
 import de.fh.energymanagementservice.repositories.EnergyTypeRepository;
@@ -63,6 +65,7 @@ public class EnergyManagementServiceImpl implements EnergyManagementService {
 					response.setOwnerEmail(sourceEntity.getBuilding().getOwnerEmail());
 					response.setStartDate(sourceEntity.getStartDate());
 					response.setZipCode(sourceEntity.getBuilding().getZipCode());
+					response.setStatus("Building and Energy Source registered successfully.");
 					return response;
 				} else {
 					logger.error("Resident address is already registered with the email id. Can not be added again. "
@@ -117,13 +120,93 @@ public class EnergyManagementServiceImpl implements EnergyManagementService {
 						response.setOwnerEmail(sourceEntity.getBuilding().getOwnerEmail());
 						response.setStartDate(sourceEntity.getStartDate());
 						response.setZipCode(sourceEntity.getBuilding().getZipCode());
+						response.setStatus("Building and Energy Source updated successfully.");
 						return response;
 					}
 				} else {
-					logger.error("Resident Owner email is not registered.");
+					logger.error("Resident Owner email is not registered." + request.getOwnerEmail());
 				}
 			} catch (Exception e) {
 				logger.error("Exception occurred while updating building and heating details" + e.getMessage());
+			}
+		}
+
+		return null;
+	}
+
+	public EnergySourceResponse addEnergySource(EnergySourceRequest request) {
+		if (request != null) {
+			logger.info("Saving energy source details for: " + request.getOwnerEmail());
+			try {
+				// Unique Email Id is saved and can't be modified.
+				Optional<BuildingEntity> bEnt = brepo.findByOwnerEmail(request.getOwnerEmail());
+				if (bEnt.isPresent()) {
+					EnergyTypeEntity typeEntity = new EnergyTypeEntity();
+					typeEntity = typeRepo.findByName(request.getEnergyType()).get();
+					EnergySourceEntity sourceEntity = new EnergySourceEntity();
+					sourceEntity.setBuilding(bEnt.get());
+					sourceEntity.setConsumption(request.getConsumption());
+					sourceEntity.setStartDate(LocalDate.parse(request.getStartDate()));
+					sourceEntity.setEndDate(LocalDate.parse(request.getEndDate()));
+					sourceEntity.setEnergyType(typeEntity);
+					sourceEntity = sourceRepo.save(sourceEntity);
+					EnergySourceResponse response = new EnergySourceResponse();
+					response.setConsumption(sourceEntity.getConsumption());
+					response.setEndDate(sourceEntity.getEndDate());
+					response.setEnergyType(sourceEntity.getEnergyType().getName());
+					response.setOwnerEmail(sourceEntity.getBuilding().getOwnerEmail());
+					response.setStartDate(sourceEntity.getStartDate());
+					response.setStatus("Energy Source added successfully.");
+					return response;
+				} else {
+					logger.error("Owner email is not registered. Cannot add energy source: " + request.getOwnerEmail());
+				}
+			} catch (Exception e) {
+				logger.error("Exception occurred while persisting energy source details" + e.getMessage());
+			}
+		}
+
+		return null;
+	}
+
+	public EnergySourceResponse updateEnergySource(EnergySourceRequest request) {
+
+		if (request != null) {
+			logger.info("Updating energy source details for: " + request.getOwnerEmail());
+			try {
+				// Unique Email Id is saved and can't be modified.
+				Optional<BuildingEntity> bEnt = brepo.findByOwnerEmail(request.getOwnerEmail());
+				if (bEnt.isPresent()) {
+					EnergyTypeEntity typeEntity = new EnergyTypeEntity();
+					typeEntity = typeRepo.findByName(request.getEnergyType()).get();
+					Optional<List<EnergySourceEntity>> sEntity = sourceRepo.findByBuildingAndEnergyType(bEnt.get(),
+							typeEntity);
+					if (sEntity.isPresent()) {
+						List<EnergySourceEntity> esourceList = sEntity.get();
+						esourceList.sort(Comparator.comparing(EnergySourceEntity::getId).reversed());
+						EnergySourceEntity sourceEntity = new EnergySourceEntity();
+						sourceEntity.setId(esourceList.get(0).getId());
+						sourceEntity.setBuilding(bEnt.get());
+						sourceEntity.setConsumption(request.getConsumption());
+						sourceEntity.setStartDate(LocalDate.parse(request.getStartDate()));
+						sourceEntity.setEndDate(LocalDate.parse(request.getEndDate()));
+						sourceEntity.setEnergyType(typeEntity);
+						sourceEntity = sourceRepo.save(sourceEntity);
+						EnergySourceResponse response = new EnergySourceResponse();
+						response.setConsumption(sourceEntity.getConsumption());
+						response.setEndDate(sourceEntity.getEndDate());
+						response.setEnergyType(sourceEntity.getEnergyType().getName());
+						response.setOwnerEmail(sourceEntity.getBuilding().getOwnerEmail());
+						response.setStartDate(sourceEntity.getStartDate());
+						response.setStatus("Energy Source updated successfully.");
+						return response;
+					}
+				} else {
+					logger.error("Resident Owner email is not registered. Cannot update energy source: "
+							+ request.getOwnerEmail());
+				}
+			} catch (Exception e) {
+				logger.error("Exception occurred while updating energy source details" + e.getMessage());
 			}
 		}
 
