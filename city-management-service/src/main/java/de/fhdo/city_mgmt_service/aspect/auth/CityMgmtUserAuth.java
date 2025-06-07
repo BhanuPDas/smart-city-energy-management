@@ -6,8 +6,6 @@ import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -18,7 +16,6 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 import de.fhdo.city_mgmt_service.domain.response.TokenVerifyResponse;
-import de.fhdo.city_mgmt_service.dto.UserDataDTO;
 import de.fhdo.city_mgmt_service.exception.UserException;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 
@@ -56,23 +53,11 @@ public class CityMgmtUserAuth {
 			}
 		} catch (HttpClientErrorException.Unauthorized e) {
 			logger.error("Exception while verifying token:" + e.getMessage());
-			removeUserData(token.getToken());
 			throw new UserException("Session Terminated. Please login Again. ");
 		} catch (Exception e) {
 			logger.error("Exception while verifying token:" + e.getMessage());
-			removeUserData(token.getToken());
 			throw new UserException("Application is facing some technical issue, try again later.");
 		}
-	}
-
-	@Cacheable(value = "userdata", key = "#p0")
-	public UserDataDTO fetchUserData(String token, UserDataDTO user) {
-		return user;
-	}
-
-	@CacheEvict(value = "userdata", key = "#p0")
-	private void removeUserData(String token) {
-
 	}
 
 }

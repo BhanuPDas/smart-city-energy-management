@@ -14,7 +14,6 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import de.fhdo.city_mgmt_service.aspect.auth.CityMgmtUserAuth;
 import de.fhdo.city_mgmt_service.aspect.auth.UserToken;
 import de.fhdo.city_mgmt_service.constant.CityManagementConstants;
 import de.fhdo.city_mgmt_service.domain.entity.CityMgmtEntity;
@@ -22,16 +21,15 @@ import de.fhdo.city_mgmt_service.domain.request.UserLoginRequest;
 import de.fhdo.city_mgmt_service.domain.request.UserRegistrationRequest;
 import de.fhdo.city_mgmt_service.domain.response.UserLoginReponse;
 import de.fhdo.city_mgmt_service.domain.response.UserRegistrationResponse;
-import de.fhdo.city_mgmt_service.dto.UserDataDTO;
 import de.fhdo.city_mgmt_service.exception.UserException;
 import de.fhdo.city_mgmt_service.repository.CityMgmtRepository;
-import de.fhdo.city_mgmt_service.service.CityMgmtService;
+import de.fhdo.city_mgmt_service.service.UserMgmtService;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 
 @Service
-public class CityMgmtServiceImpl implements CityMgmtService {
+public class UserMgmtServiceImpl implements UserMgmtService {
 
-	private final Logger logger = LoggerFactory.getLogger(CityMgmtServiceImpl.class);
+	private final Logger logger = LoggerFactory.getLogger(UserMgmtServiceImpl.class);
 
 	@Autowired
 	public RestTemplate rest;
@@ -41,9 +39,6 @@ public class CityMgmtServiceImpl implements CityMgmtService {
 
 	@Autowired
 	private CityMgmtRepository repo;
-
-	@Autowired
-	private CityMgmtUserAuth cache;
 
 	@Autowired
 	private UserToken token;
@@ -98,13 +93,11 @@ public class CityMgmtServiceImpl implements CityMgmtService {
 					repoEntity.setResponse(obj.writeValueAsString(resp.getBody()));
 					repo.save(repoEntity);
 					token.setToken(resp.getBody().getAccess_token());
-					UserDataDTO userdto = new UserDataDTO();
-					userdto.setUserId(resp.getBody().getUser().getUserId());
-					userdto.setEmail(resp.getBody().getUser().getEmail());
-					userdto.setName(resp.getBody().getUser().getName());
-					userdto.setPhone(resp.getBody().getUser().getPhone());
-					userdto.setRole(resp.getBody().getUser().getRole());
-					cache.fetchUserData(resp.getBody().getAccess_token(), userdto);
+					token.setUserId(resp.getBody().getUser().getUserId());
+					token.setEmail(resp.getBody().getUser().getEmail());
+					token.setName(resp.getBody().getUser().getName());
+					token.setPhone(resp.getBody().getUser().getPhone());
+					token.setRole(resp.getBody().getUser().getRole());
 					logger.info("Login successful for user" + resp.getBody().getUser().getUserId());
 					if (resp.getBody().getUser().getRole().equalsIgnoreCase("city_planner"))
 						return "city_planner";

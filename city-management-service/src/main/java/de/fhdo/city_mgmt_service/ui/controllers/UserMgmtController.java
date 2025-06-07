@@ -12,7 +12,7 @@ import de.fhdo.city_mgmt_service.domain.request.UserRegistrationRequest;
 import de.fhdo.city_mgmt_service.dto.UserLoginDTO;
 import de.fhdo.city_mgmt_service.dto.UserRegistrationDTO;
 import de.fhdo.city_mgmt_service.exception.UserException;
-import de.fhdo.city_mgmt_service.service.CityMgmtService;
+import de.fhdo.city_mgmt_service.service.UserMgmtService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -22,13 +22,13 @@ import org.slf4j.LoggerFactory;
 
 @Controller
 @RequestMapping("/api/v1")
-@Tag(name = "City Management Controller", description = "APIs for City Management")
-public class CityMgmtController {
+@Tag(name = "City Management Controller for user mgmt", description = "APIs for managing users")
+public class UserMgmtController {
 
-	private final Logger logger = LoggerFactory.getLogger(CityMgmtController.class);
+	private final Logger logger = LoggerFactory.getLogger(UserMgmtController.class);
 
 	@Autowired
-	private CityMgmtService service;
+	private UserMgmtService service;
 
 	@PostMapping("/register")
 	@Operation(summary = "Registration")
