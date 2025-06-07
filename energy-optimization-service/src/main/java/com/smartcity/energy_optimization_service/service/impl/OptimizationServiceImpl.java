@@ -18,20 +18,16 @@ import java.util.Set;
 
 @Service
 public class OptimizationServiceImpl implements OptimizationService {
-
+	
 	private final Logger logger = LoggerFactory.getLogger(OptimizationServiceImpl.class);
-
 	@Autowired
 	private BuildingRepository buildingRepository;
-
 	@Autowired
 	private EnergySourceRepository energySourceRepository;
-
 	@Autowired
 	private EnergyTypeRepository energyTypeRepository;
-
 	private static final double EFFICIENCY_THRESHOLD = 250.0; // kWh/m²/year
-
+	
 	public String generateRecommendation(String ownerEmail) {
 		StringBuilder recommendations = new StringBuilder();
 		try {

@@ -17,7 +17,9 @@ import de.fhdo.city_mgmt_service.aspect.auth.UserToken;
 import de.fhdo.city_mgmt_service.constant.CityManagementConstants;
 import de.fhdo.city_mgmt_service.domain.entity.CityMgmtEntity;
 import de.fhdo.city_mgmt_service.domain.request.EnergyMgmtRequest;
+import de.fhdo.city_mgmt_service.domain.request.EnergySourceRequest;
 import de.fhdo.city_mgmt_service.domain.response.EnergyMgmtResponse;
+import de.fhdo.city_mgmt_service.domain.response.EnergySourceResponse;
 import de.fhdo.city_mgmt_service.exception.UserException;
 import de.fhdo.city_mgmt_service.repository.CityMgmtRepository;
 import de.fhdo.city_mgmt_service.service.EnergyMgmtService;
@@ -29,7 +31,6 @@ public class EnergyMgmtServiceImpl implements EnergyMgmtService {
 	private final Logger logger = LoggerFactory.getLogger(EnergyMgmtServiceImpl.class);
 	@Autowired
 	public RestTemplate rest;
-
 	@Autowired
 	private ObjectMapper obj;
 	@Autowired
@@ -39,7 +40,7 @@ public class EnergyMgmtServiceImpl implements EnergyMgmtService {
 	@Value("${energy_mgmt.url}")
 	private String energy_mgmt_url;
 
-	@CircuitBreaker(name = "BuildingRegister")
+	@CircuitBreaker(name = "buildingRegister")
 	public EnergyMgmtResponse addBuildingEnergy(EnergyMgmtRequest request) throws UserException {
 		EnergyMgmtResponse response = new EnergyMgmtResponse();
 		if (request != null && token.getRole().equalsIgnoreCase("city_planner")) {
@@ -81,7 +82,7 @@ public class EnergyMgmtServiceImpl implements EnergyMgmtService {
 		return null;
 	}
 
-	@CircuitBreaker(name = "BuildingUpdate")
+	@CircuitBreaker(name = "buildingUpdate")
 	public EnergyMgmtResponse updateBuildingEnergy(EnergyMgmtRequest request) throws UserException {
 		EnergyMgmtResponse response = new EnergyMgmtResponse();
 		if (request != null && token.getRole().equalsIgnoreCase("city_planner")) {
@@ -118,6 +119,79 @@ public class EnergyMgmtServiceImpl implements EnergyMgmtService {
 				logger.error("Exception occured while updating building and energy source: " + e.getMessage());
 				throw new UserException(
 						"Exception occured while updating building and energy source: " + e.getMessage());
+			}
+		}
+		return null;
+	}
+
+	@CircuitBreaker(name = "energyRegister")
+	public EnergySourceResponse addResidentEnergy(EnergySourceRequest request) throws UserException {
+		EnergySourceResponse response = new EnergySourceResponse();
+		if (request != null && token.getRole().equalsIgnoreCase("citizen")) {
+			String url = UriComponentsBuilder.fromUriString(energy_mgmt_url + "/api/v1/energy-source/add")
+					.toUriString();
+			HttpHeaders headers = new HttpHeaders();
+			headers.setContentType(MediaType.APPLICATION_JSON);
+			HttpEntity<EnergySourceRequest> entity = new HttpEntity<>(request, headers);
+			try {
+				ResponseEntity<EnergySourceResponse> resp = rest.exchange(url, HttpMethod.POST, entity,
+						EnergySourceResponse.class);
+				if (resp.getBody() != null) {
+					response.setConsumption(resp.getBody().getConsumption());
+					response.setEndDate(resp.getBody().getEndDate());
+					response.setEnergyType(resp.getBody().getEnergyType());
+					response.setOwnerEmail(resp.getBody().getOwnerEmail());
+					response.setStartDate(resp.getBody().getStartDate());
+					response.setStatus(resp.getBody().getStatus());
+					CityMgmtEntity repoEntity = new CityMgmtEntity();
+					repoEntity.setApp(CityManagementConstants.ENERGY_MGMT);
+					repoEntity.setRequest(obj.writeValueAsString(request));
+					repoEntity.setResponse(obj.writeValueAsString(resp.getBody()));
+					repo.save(repoEntity);
+					logger.info("New Energy source is successfully added for owner: " + resp.getBody().getOwnerEmail());
+					return response;
+				}
+
+			} catch (Exception e) {
+				logger.error("Exception occured while adding new energy source: " + e.getMessage());
+				throw new UserException("Exception occured while adding new energy source " + e.getMessage());
+			}
+		}
+		return null;
+	}
+
+	@CircuitBreaker(name = "energyUpdate")
+	public EnergySourceResponse updateResidentEnergy(EnergySourceRequest request) throws UserException {
+		EnergySourceResponse response = new EnergySourceResponse();
+		if (request != null && token.getRole().equalsIgnoreCase("citizen")
+				&& token.getEmail().equalsIgnoreCase(request.getOwnerEmail())) {
+			String url = UriComponentsBuilder.fromUriString(energy_mgmt_url + "/api/v1/energy-source/update")
+					.toUriString();
+			HttpHeaders headers = new HttpHeaders();
+			headers.setContentType(MediaType.APPLICATION_JSON);
+			HttpEntity<EnergySourceRequest> entity = new HttpEntity<>(request, headers);
+			try {
+				ResponseEntity<EnergySourceResponse> resp = rest.exchange(url, HttpMethod.PUT, entity,
+						EnergySourceResponse.class);
+				if (resp.getBody() != null) {
+					response.setConsumption(resp.getBody().getConsumption());
+					response.setEndDate(resp.getBody().getEndDate());
+					response.setEnergyType(resp.getBody().getEnergyType());
+					response.setOwnerEmail(resp.getBody().getOwnerEmail());
+					response.setStartDate(resp.getBody().getStartDate());
+					response.setStatus(resp.getBody().getStatus());
+					CityMgmtEntity repoEntity = new CityMgmtEntity();
+					repoEntity.setApp(CityManagementConstants.ENERGY_MGMT);
+					repoEntity.setRequest(obj.writeValueAsString(request));
+					repoEntity.setResponse(obj.writeValueAsString(resp.getBody()));
+					repo.save(repoEntity);
+					logger.info("Energy source is updated for owner: " + resp.getBody().getOwnerEmail());
+					return response;
+				}
+
+			} catch (Exception e) {
+				logger.error("Exception occured while updating energy source: " + e.getMessage());
+				throw new UserException("Exception occured while updating energy source: " + e.getMessage());
 			}
 		}
 		return null;
