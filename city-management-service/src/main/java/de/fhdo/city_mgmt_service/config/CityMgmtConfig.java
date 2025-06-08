@@ -4,7 +4,6 @@ import java.time.Duration;
 
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.cloud.circuitbreaker.resilience4j.Resilience4JCircuitBreakerFactory;
-import org.springframework.cloud.circuitbreaker.resilience4j.Resilience4JConfigBuilder;
 import org.springframework.cloud.client.circuitbreaker.Customizer;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;
@@ -37,11 +36,48 @@ public class CityMgmtConfig {
 
 	@Bean(autowireCandidate = true)
 	Customizer<Resilience4JCircuitBreakerFactory> defaultCustomizer() {
-		return factory -> factory.configureDefault(id -> new Resilience4JConfigBuilder(id)
-				.timeLimiterConfig(TimeLimiterConfig.custom().timeoutDuration(Duration.ofSeconds(5)).build())
-				.circuitBreakerConfig(CircuitBreakerConfig.custom().failureRateThreshold(50).minimumNumberOfCalls(5)
-						.slidingWindowSize(10).waitDurationInOpenState(Duration.ofSeconds(5)).build())
-				.build());
+		return factory -> {
+			factory.configure(builder -> builder
+					.timeLimiterConfig(TimeLimiterConfig.custom().timeoutDuration(Duration.ofSeconds(5)).build())
+					.circuitBreakerConfig(CircuitBreakerConfig.custom().failureRateThreshold(50).minimumNumberOfCalls(5)
+							.slidingWindowSize(10).waitDurationInOpenState(Duration.ofSeconds(5)).build()),
+					"register");
+			factory.configure(builder -> builder
+					.timeLimiterConfig(TimeLimiterConfig.custom().timeoutDuration(Duration.ofSeconds(5)).build())
+					.circuitBreakerConfig(CircuitBreakerConfig.custom().failureRateThreshold(50).minimumNumberOfCalls(5)
+							.slidingWindowSize(10).waitDurationInOpenState(Duration.ofSeconds(5)).build()),
+					"login");
+			factory.configure(builder -> builder
+					.timeLimiterConfig(TimeLimiterConfig.custom().timeoutDuration(Duration.ofSeconds(5)).build())
+					.circuitBreakerConfig(CircuitBreakerConfig.custom().failureRateThreshold(50).minimumNumberOfCalls(5)
+							.slidingWindowSize(10).waitDurationInOpenState(Duration.ofSeconds(5)).build()),
+					"energyRecommend");
+			factory.configure(builder -> builder
+					.timeLimiterConfig(TimeLimiterConfig.custom().timeoutDuration(Duration.ofSeconds(5)).build())
+					.circuitBreakerConfig(CircuitBreakerConfig.custom().failureRateThreshold(50).minimumNumberOfCalls(5)
+							.slidingWindowSize(10).waitDurationInOpenState(Duration.ofSeconds(5)).build()),
+					"buildingRegister");
+			factory.configure(builder -> builder
+					.timeLimiterConfig(TimeLimiterConfig.custom().timeoutDuration(Duration.ofSeconds(5)).build())
+					.circuitBreakerConfig(CircuitBreakerConfig.custom().failureRateThreshold(50).minimumNumberOfCalls(5)
+							.slidingWindowSize(10).waitDurationInOpenState(Duration.ofSeconds(5)).build()),
+					"buildingUpdate");
+			factory.configure(builder -> builder
+					.timeLimiterConfig(TimeLimiterConfig.custom().timeoutDuration(Duration.ofSeconds(5)).build())
+					.circuitBreakerConfig(CircuitBreakerConfig.custom().failureRateThreshold(50).minimumNumberOfCalls(5)
+							.slidingWindowSize(10).waitDurationInOpenState(Duration.ofSeconds(5)).build()),
+					"energyRegister");
+			factory.configure(builder -> builder
+					.timeLimiterConfig(TimeLimiterConfig.custom().timeoutDuration(Duration.ofSeconds(5)).build())
+					.circuitBreakerConfig(CircuitBreakerConfig.custom().failureRateThreshold(50).minimumNumberOfCalls(5)
+							.slidingWindowSize(10).waitDurationInOpenState(Duration.ofSeconds(5)).build()),
+					"energyUpdate");
+			factory.configure(builder -> builder
+					.timeLimiterConfig(TimeLimiterConfig.custom().timeoutDuration(Duration.ofSeconds(5)).build())
+					.circuitBreakerConfig(CircuitBreakerConfig.custom().failureRateThreshold(50).minimumNumberOfCalls(5)
+							.slidingWindowSize(10).waitDurationInOpenState(Duration.ofSeconds(5)).build()),
+					"energyAnalytics");
+		};
 	}
 
 }
