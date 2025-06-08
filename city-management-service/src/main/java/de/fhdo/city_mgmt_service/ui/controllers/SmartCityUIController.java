@@ -24,7 +24,7 @@ public class SmartCityUIController {
 
 	@GetMapping("/home-ct")
 	public String viewHomeCT(Model model) {
-		return "welcome_city_planner";
+		return "welcome_citizen";
 	}
 
 	@Operation(summary = "Registration")
