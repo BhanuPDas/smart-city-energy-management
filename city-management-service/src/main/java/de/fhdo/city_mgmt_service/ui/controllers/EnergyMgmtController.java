@@ -26,7 +26,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 
 @Controller
 @RequestMapping("/api/v1")
-@Tag(name = "City Management Controller for energy mgmt", description = "APIs for managing building and energy sources")
+@Tag(name = "City Management for energy mgmt", description = "APIs for managing building and energy sources")
 public class EnergyMgmtController {
 
 	private final Logger logger = LoggerFactory.getLogger(EnergyMgmtController.class);

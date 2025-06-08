@@ -13,9 +13,11 @@ import de.fhdo.city_mgmt_service.exception.UserException;
 import de.fhdo.city_mgmt_service.service.EnergyOptimizationService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 @Controller
 @RequestMapping("/api/v1")
+@Tag(name = "City Management for Recommendations", description = "APIs for Recommendations")
 public class EnergyOptimizationController {
 
 	private final Logger logger = LoggerFactory.getLogger(EnergyOptimizationController.class);

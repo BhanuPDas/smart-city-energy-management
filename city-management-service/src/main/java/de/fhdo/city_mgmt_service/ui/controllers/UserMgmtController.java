@@ -22,7 +22,7 @@ import org.slf4j.LoggerFactory;
 
 @Controller
 @RequestMapping("/api/v1")
-@Tag(name = "City Management Controller for user mgmt", description = "APIs for managing users")
+@Tag(name = "City Management for user mgmt", description = "APIs for managing users")
 public class UserMgmtController {
 
 	private final Logger logger = LoggerFactory.getLogger(UserMgmtController.class);

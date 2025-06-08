@@ -22,21 +22,21 @@ public class AnalyticsController {
 
 	@GetMapping("/email")
 	public ResponseEntity<List<AnalyticsResponse>> getByEmail(@RequestParam("email") String email,
-			@RequestParam("startDate") @DateTimeFormat(pattern = "dd-MM-yyyy") LocalDate startDate) {
+			@RequestParam("startDate") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate) {
 		logger.info("Generating Analytics report for:" + email);
 		return ResponseEntity.ok(service.getBuildingByEmail(email, startDate));
 	}
 
 	@GetMapping("/zipcode")
 	public ResponseEntity<List<AnalyticsResponse>> getByZipCode(@RequestParam("zipCode") Integer zipCode,
-			@RequestParam("startDate") @DateTimeFormat(pattern = "dd-MM-yyyy") LocalDate startDate) {
+			@RequestParam("startDate") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate) {
 		logger.info("Generating Analytics report for the neighborhood:" + zipCode);
 		return ResponseEntity.ok(service.getBuildingsByZipCode(zipCode, startDate));
 	}
 
 	@GetMapping("/city")
 	public ResponseEntity<List<AnalyticsResponse>> getByCity(@RequestParam("city") String city,
-			@RequestParam("startDate") @DateTimeFormat(pattern = "dd-MM-yyyy") LocalDate startDate) {
+			@RequestParam("startDate") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate) {
 		logger.info("Generating Analytics report for the city:" + city);
 		return ResponseEntity.ok(service.getBuildingsByCity(city, startDate));
 	}

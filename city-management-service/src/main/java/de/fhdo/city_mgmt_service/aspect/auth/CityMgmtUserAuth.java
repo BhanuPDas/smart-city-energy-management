@@ -2,8 +2,8 @@ package de.fhdo.city_mgmt_service.aspect.auth;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Before;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -35,7 +35,9 @@ public class CityMgmtUserAuth {
 	private UserToken token;
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	@AfterReturning("execution(* de.fhdo.city_mgmt_service.service.impl.CityMgmtServiceImpl.loginUser(..))")
+	@Before("execution(* de.fhdo.city_mgmt_service.service.impl.EnergyMgmtServiceImpl.*(..)) || "
+			+ "execution(* de.fhdo.city_mgmt_service.service.impl.EnergyOptimizationServiceImpl.*(..)) || "
+			+ "execution(* de.fhdo.city_mgmt_service.service.impl.EnergyAnalyticsServiceImpl.*(..))")
 	@CircuitBreaker(name = "tokenVerify")
 	public void verifyToken() throws UserException {
 
