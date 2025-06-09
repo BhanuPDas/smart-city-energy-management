@@ -8,7 +8,7 @@ Related Documents can be found on this page [Wiki](https://github.com/BhanuPDas/
 2) Run the Docker compose file (command: docker compose up) in the root folder. This command will fetch all images from Docker Hub container registry, including the database image required by the application.
 3) Once all Docker containers spin up, please verify the applications on Eureka - http://localhost:8761/ (This page should show 5 applications registered.)
 
-**Please Note: All application images are compiled and created on a Mac. Containers are dependent on Linux/Arm64 CPU architecture, and may not be supported by other architectures .**
+**Please Note: All application images are compiled and created on a Mac - ARM64 CPU architecture, and may not be supported by other architectures .**
 [In case required, individual modules/services can be containerized using the Docker file for each service.]
 
 ## Enter the URL in the browser for API Docs for reference:
@@ -23,7 +23,7 @@ Related Documents can be found on this page [Wiki](https://github.com/BhanuPDas/
 
 1) Once all containers start, navigate to - **http://localhost:8500/register**
 2) The above URL is the starting point for the application. 
-3) A user can be registered either as "City Planner" or "Citizen". Accordingly, the screens and functionality will differ in the following UI screens.
+3) A user can be registered either as "City Planner" or "Citizen". Accordingly, the UI screens and functionality will differ.
 4) After registration, please log in - **http://localhost:8500/login**
 5) Please note: At the time of adding a resident building energy source, the owner's email refers to the email address of the owner or the citizen who is the owner of the building, and it has to be a unique email ID.
 6) Grafana dashboards have been integrated and can be accessed at: **http://localhost:3000/**
