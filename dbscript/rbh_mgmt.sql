@@ -33,4 +33,16 @@ CREATE TABLE IF NOT EXISTS rbh_mgmt.energy_source
     FOREIGN KEY (building_id) REFERENCES rbh_mgmt.building (id) MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION,
     FOREIGN KEY (energy_type_id) REFERENCES rbh_mgmt.energy_type (id) MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION
 );
+
+INSERT INTO rbh_mgmt.building (id, floor_area, zip_code, address, city, owner_email) VALUES (1, 26, 44222, 'ErmlingStr 1', 'Dortmund', 'rahul_new@test.com');
+INSERT INTO rbh_mgmt.building (id, floor_area, zip_code, address, city, owner_email) VALUES (2, 32, 44225, 'ErmlingStr 23', 'Dortmund', 'jonson@test.com');
+INSERT INTO rbh_mgmt.building (id, floor_area, zip_code, address, city, owner_email) VALUES (3, 45, 44323, 'Stiftstr 2', 'Dortmund', 'jon_rose@test.com');
+
+INSERT INTO rbh_mgmt.energy_source (id, building_id, energy_type_id, consumption, start_date, end_date) VALUES (1, 1, 2, 458, '2024-03-01 00:00:00', '2024-05-31 00:00:00');
+INSERT INTO rbh_mgmt.energy_source (id, building_id, energy_type_id, consumption, start_date, end_date) VALUES (3, 3, 4, 532, '2024-02-01 00:00:00', '2024-05-31 00:00:00');
+INSERT INTO rbh_mgmt.energy_source (id, building_id, energy_type_id, consumption, start_date, end_date) VALUES (5, 1, 2, 411, '2024-09-01 00:00:00', '2024-11-30 00:00:00');
+INSERT INTO rbh_mgmt.energy_source (id, building_id, energy_type_id, consumption, start_date, end_date) VALUES (4, 3, 2, 413, '2024-09-01 00:00:00', '2024-11-30 00:00:00');
+INSERT INTO rbh_mgmt.energy_source (id, building_id, energy_type_id, consumption, start_date, end_date) VALUES (6, 2, 4, 444, '2024-08-01 00:00:00', '2024-11-30 00:00:00');
+INSERT INTO rbh_mgmt.energy_source (id, building_id, energy_type_id, consumption, start_date, end_date) VALUES (2, 2, 3, 437, '2024-08-01 00:00:00', '2024-12-31 00:00:00');
+INSERT INTO rbh_mgmt.energy_source (id, building_id, energy_type_id, consumption, start_date, end_date) VALUES (7, 2, 1, 335, '2025-01-01 00:00:00', '2025-04-30 00:00:00');
 COMMIT;
