@@ -51,6 +51,11 @@ public class CityMgmtConfig {
 					.timeLimiterConfig(TimeLimiterConfig.custom().timeoutDuration(Duration.ofSeconds(5)).build())
 					.circuitBreakerConfig(CircuitBreakerConfig.custom().failureRateThreshold(50).minimumNumberOfCalls(5)
 							.slidingWindowSize(10).waitDurationInOpenState(Duration.ofSeconds(5)).build()),
+					"tokenVerify");
+			factory.configure(builder -> builder
+					.timeLimiterConfig(TimeLimiterConfig.custom().timeoutDuration(Duration.ofSeconds(5)).build())
+					.circuitBreakerConfig(CircuitBreakerConfig.custom().failureRateThreshold(50).minimumNumberOfCalls(5)
+							.slidingWindowSize(10).waitDurationInOpenState(Duration.ofSeconds(5)).build()),
 					"energyRecommend");
 			factory.configure(builder -> builder
 					.timeLimiterConfig(TimeLimiterConfig.custom().timeoutDuration(Duration.ofSeconds(5)).build())

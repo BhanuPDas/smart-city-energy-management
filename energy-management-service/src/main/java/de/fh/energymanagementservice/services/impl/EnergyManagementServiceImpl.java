@@ -3,7 +3,6 @@ package de.fh.energymanagementservice.services.impl;
 import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,8 +36,8 @@ public class EnergyManagementServiceImpl implements EnergyManagementService {
 			logger.info("Saving building and heating details for: " + request.getOwnerEmail());
 			try {
 				// Unique Email Id is saved and can't be modified.
-				Optional<BuildingEntity> bEnt = brepo.findByOwnerEmail(request.getOwnerEmail());
-				if (bEnt.isEmpty()) {
+				BuildingEntity bEnt = brepo.findByOwnerEmail(request.getOwnerEmail());
+				if (bEnt == null) {
 					BuildingEntity bEntity = new BuildingEntity();
 					bEntity.setAddress(request.getAddress());
 					bEntity.setCity(request.getCity());
@@ -85,22 +84,21 @@ public class EnergyManagementServiceImpl implements EnergyManagementService {
 			logger.info("Modifying building and heating details for: " + request.getOwnerEmail());
 			try {
 				// Unique Email Id is saved and can't be modified.
-				Optional<BuildingEntity> bEnt = brepo.findByOwnerEmail(request.getOwnerEmail());
-				if (bEnt.isPresent()) {
+				BuildingEntity bEnt = brepo.findByOwnerEmail(request.getOwnerEmail());
+				if (bEnt != null) {
 					BuildingEntity bEntity = new BuildingEntity();
-					bEntity.setId(bEnt.get().getId());
+					bEntity.setId(bEnt.getId());
 					bEntity.setAddress(request.getAddress());
 					bEntity.setCity(request.getCity());
 					bEntity.setFloorArea(request.getFloorArea());
 					bEntity.setZipCode(request.getZipCode());
-					bEntity.setOwnerEmail(bEnt.get().getOwnerEmail());
+					bEntity.setOwnerEmail(bEnt.getOwnerEmail());
 					bEntity = brepo.save(bEntity);
 					EnergyTypeEntity typeEntity = new EnergyTypeEntity();
 					typeEntity = typeRepo.findByName(request.getEnergyType()).get();
-					Optional<List<EnergySourceEntity>> sEntity = sourceRepo.findByBuildingAndEnergyType(bEntity,
-							typeEntity);
-					if (sEntity.isPresent()) {
-						List<EnergySourceEntity> esourceList = sEntity.get();
+					List<EnergySourceEntity> sEntity = sourceRepo.findByBuildingId(bEntity.getId());
+					if (sEntity != null && !sEntity.isEmpty()) {
+						List<EnergySourceEntity> esourceList = sEntity;
 						esourceList.sort(Comparator.comparing(EnergySourceEntity::getId).reversed());
 						EnergySourceEntity sourceEntity = new EnergySourceEntity();
 						sourceEntity.setId(esourceList.get(0).getId());
@@ -139,12 +137,12 @@ public class EnergyManagementServiceImpl implements EnergyManagementService {
 			logger.info("Saving energy source details for: " + request.getOwnerEmail());
 			try {
 				// Unique Email Id is saved and can't be modified.
-				Optional<BuildingEntity> bEnt = brepo.findByOwnerEmail(request.getOwnerEmail());
-				if (bEnt.isPresent()) {
+				BuildingEntity bEnt = brepo.findByOwnerEmail(request.getOwnerEmail());
+				if (bEnt != null) {
 					EnergyTypeEntity typeEntity = new EnergyTypeEntity();
 					typeEntity = typeRepo.findByName(request.getEnergyType()).get();
 					EnergySourceEntity sourceEntity = new EnergySourceEntity();
-					sourceEntity.setBuilding(bEnt.get());
+					sourceEntity.setBuilding(bEnt);
 					sourceEntity.setConsumption(request.getConsumption());
 					sourceEntity.setStartDate(LocalDate.parse(request.getStartDate()));
 					sourceEntity.setEndDate(LocalDate.parse(request.getEndDate()));
@@ -175,18 +173,17 @@ public class EnergyManagementServiceImpl implements EnergyManagementService {
 			logger.info("Updating energy source details for: " + request.getOwnerEmail());
 			try {
 				// Unique Email Id is saved and can't be modified.
-				Optional<BuildingEntity> bEnt = brepo.findByOwnerEmail(request.getOwnerEmail());
-				if (bEnt.isPresent()) {
+				BuildingEntity bEnt = brepo.findByOwnerEmail(request.getOwnerEmail());
+				if (bEnt != null) {
 					EnergyTypeEntity typeEntity = new EnergyTypeEntity();
 					typeEntity = typeRepo.findByName(request.getEnergyType()).get();
-					Optional<List<EnergySourceEntity>> sEntity = sourceRepo.findByBuildingAndEnergyType(bEnt.get(),
-							typeEntity);
-					if (sEntity.isPresent()) {
-						List<EnergySourceEntity> esourceList = sEntity.get();
+					List<EnergySourceEntity> sEntity = sourceRepo.findByBuildingId(bEnt.getId());
+					if (sEntity != null && !sEntity.isEmpty()) {
+						List<EnergySourceEntity> esourceList = sEntity;
 						esourceList.sort(Comparator.comparing(EnergySourceEntity::getId).reversed());
 						EnergySourceEntity sourceEntity = new EnergySourceEntity();
 						sourceEntity.setId(esourceList.get(0).getId());
-						sourceEntity.setBuilding(bEnt.get());
+						sourceEntity.setBuilding(bEnt);
 						sourceEntity.setConsumption(request.getConsumption());
 						sourceEntity.setStartDate(LocalDate.parse(request.getStartDate()));
 						sourceEntity.setEndDate(LocalDate.parse(request.getEndDate()));

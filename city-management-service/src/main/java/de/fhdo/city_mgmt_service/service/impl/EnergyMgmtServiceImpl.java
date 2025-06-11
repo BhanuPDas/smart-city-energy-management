@@ -127,7 +127,9 @@ public class EnergyMgmtServiceImpl implements EnergyMgmtService {
 	@CircuitBreaker(name = "energyRegister")
 	public EnergySourceResponse addResidentEnergy(EnergySourceRequest request) throws UserException {
 		EnergySourceResponse response = new EnergySourceResponse();
-		if (request != null && token.getRole().equalsIgnoreCase("citizen")) {
+		//Add energy source for self- cannot add for other citizen
+		if (request != null && token.getRole().equalsIgnoreCase("citizen")
+				&& token.getEmail().equalsIgnoreCase(request.getOwnerEmail())) {
 			String url = UriComponentsBuilder.fromUriString(energy_mgmt_url + "/api/v1/energy-source/add")
 					.toUriString();
 			HttpHeaders headers = new HttpHeaders();
@@ -163,6 +165,7 @@ public class EnergyMgmtServiceImpl implements EnergyMgmtService {
 	@CircuitBreaker(name = "energyUpdate")
 	public EnergySourceResponse updateResidentEnergy(EnergySourceRequest request) throws UserException {
 		EnergySourceResponse response = new EnergySourceResponse();
+		//Edit energy source for self- cannot add for other citizen
 		if (request != null && token.getRole().equalsIgnoreCase("citizen")
 				&& token.getEmail().equalsIgnoreCase(request.getOwnerEmail())) {
 			String url = UriComponentsBuilder.fromUriString(energy_mgmt_url + "/api/v1/energy-source/update")

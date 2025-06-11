@@ -19,6 +19,7 @@ import de.fhdo.city_mgmt_service.constant.CityManagementConstants;
 import de.fhdo.city_mgmt_service.domain.entity.CityMgmtEntity;
 import de.fhdo.city_mgmt_service.domain.request.UserLoginRequest;
 import de.fhdo.city_mgmt_service.domain.request.UserRegistrationRequest;
+import de.fhdo.city_mgmt_service.domain.response.TokenVerifyResponse;
 import de.fhdo.city_mgmt_service.domain.response.UserLoginReponse;
 import de.fhdo.city_mgmt_service.domain.response.UserRegistrationResponse;
 import de.fhdo.city_mgmt_service.exception.UserException;
@@ -105,13 +106,37 @@ public class UserMgmtServiceImpl implements UserMgmtService {
 						return "citizen";
 				}
 			} catch (HttpClientErrorException.Unauthorized ex) {
-				logger.error("Login successful for user" + request.getEmail() + ex.getMessage());
+				logger.error("Login failed for user: " + request.getEmail() + ex.getMessage());
 				return "failure";
 			} catch (Exception e) {
-				logger.error("Login successful for user" + request.getEmail() + e.getMessage());
+				logger.error("Login failed for user: " + request.getEmail() + e.getMessage());
 				throw new UserException("Exception occured during user login. " + e.getMessage());
 			}
 		}
 		return "failure";
+	}
+
+	@CircuitBreaker(name = "tokenVerify")
+	public void verifyToken() throws UserException {
+
+		String url = UriComponentsBuilder.fromUriString(user_mgmt_url + "/v1/auth/verify").toUriString();
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		headers.setBearerAuth(token.getToken());
+		HttpEntity entity = new HttpEntity(headers);
+		try {
+			ResponseEntity<TokenVerifyResponse> resp = rest.exchange(url, HttpMethod.POST, entity,
+					TokenVerifyResponse.class);
+			if (resp.getBody() != null) {
+				String status = resp.getBody().getStatus();
+				logger.info("token status is:" + status);
+			}
+		} catch (HttpClientErrorException.Unauthorized e) {
+			logger.error("Exception while verifying token:" + e.getMessage());
+			throw new UserException("Session Terminated. Please login Again. ");
+		} catch (Exception e) {
+			logger.error("Exception while verifying token:" + e.getMessage());
+			throw new UserException("Application is facing some technical issue, try again later.");
+		}
 	}
 }
