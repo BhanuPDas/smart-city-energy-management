@@ -15,4 +15,9 @@ INSERT INTO user_mgmt.users (id, name, email, phone, role, password) VALUES (3, 
 INSERT INTO user_mgmt.users (id, name, email, phone, role, password) VALUES (4, 'Jonson', 'jonson@test.com', '1223344515', 'citizen', '$2b$10$.2udKLg5ccvQ91iMEkESpeDgzMAmqFToD0LSOVwKqb7L49r0u/ixW');
 INSERT INTO user_mgmt.users (id, name, email, phone, role, password) VALUES (5, 'Rahul Kumar', 'rahul_new@test.com', '2233445566', 'citizen', '$2b$10$0Ow2T6WfAUnLWPgA9JbwtuSK25bnUodXfvXw6A5bt4iym8p9R7Ily');
 INSERT INTO user_mgmt.users (id, name, email, phone, role, password) VALUES (6, 'Bhanu Pratap Das', 'bhanu@test.com', '12345654321', 'city_planner', '$2b$10$1TExJ7OiGcuRRePnIJBB9ulSowmeGkyrtJJH2J..c2tL.u.URTtVC');
+SELECT setval(
+  pg_get_serial_sequence('user_mgmt.users', 'id'),
+  (SELECT COALESCE(MAX(id), 1) FROM user_mgmt.users),
+  true
+);
 COMMIT;

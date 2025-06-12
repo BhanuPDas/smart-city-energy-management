@@ -45,4 +45,14 @@ INSERT INTO rbh_mgmt.energy_source (id, building_id, energy_type_id, consumption
 INSERT INTO rbh_mgmt.energy_source (id, building_id, energy_type_id, consumption, start_date, end_date) VALUES (6, 2, 4, 444, '2024-08-01 00:00:00', '2024-11-30 00:00:00');
 INSERT INTO rbh_mgmt.energy_source (id, building_id, energy_type_id, consumption, start_date, end_date) VALUES (2, 2, 3, 437, '2024-08-01 00:00:00', '2024-12-31 00:00:00');
 INSERT INTO rbh_mgmt.energy_source (id, building_id, energy_type_id, consumption, start_date, end_date) VALUES (7, 2, 1, 335, '2025-01-01 00:00:00', '2025-04-30 00:00:00');
+SELECT setval(
+  pg_get_serial_sequence('rbh_mgmt.energy_source', 'id'),
+  (SELECT COALESCE(MAX(id), 1) FROM rbh_mgmt.energy_source),
+  true
+);
+SELECT setval(
+  pg_get_serial_sequence('rbh_mgmt.building', 'id'),
+  (SELECT COALESCE(MAX(id), 1) FROM rbh_mgmt.building),
+  true
+);
 COMMIT;
