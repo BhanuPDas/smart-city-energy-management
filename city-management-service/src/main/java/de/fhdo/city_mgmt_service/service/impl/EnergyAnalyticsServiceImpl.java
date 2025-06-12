@@ -75,7 +75,7 @@ public class EnergyAnalyticsServiceImpl implements EnergyAnalyticsService {
 				ResponseEntity<List<AnalyticsResponse>> resp = rest.exchange(url, HttpMethod.GET, entity,
 						new ParameterizedTypeReference<List<AnalyticsResponse>>() {
 						});
-				if (resp.getBody() != null) {
+				if (resp.getBody() != null && !resp.getBody().isEmpty()) {
 					List<AnalyticsResponse> response = resp.getBody();
 					CityMgmtEntity repoEntity = new CityMgmtEntity();
 					repoEntity.setApp(CityManagementConstants.ENERGY_ANALYTICS);

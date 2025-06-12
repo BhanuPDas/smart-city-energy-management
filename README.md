@@ -29,3 +29,6 @@ Related Documents can be found on this page [Wiki](https://github.com/BhanuPDas/
 6) Grafana dashboards have been integrated and can be accessed at: **http://localhost:3000/**
 7) Grafana dashboards have panels to show request throughput(Number of requests executed per second) and application logs of backend services. By default, Prometheus datasource is selected for request throughput; switch to the Loki datasource to view logs.
 8) On logging in for the first time, Grafana asks to change the password. Default user/pwd: admin/admin
+9) Dummy data are included in the script and dumped in DB at the startup to help in testing. No separate sql are needed to be executed.
+10) Sample User for testing: Jon_Doe@Gmail.com/123 (username/pwd role - city planner), bhanu@test.com/123 (username/pwd role - city planner), rahul_new@test.com/123 (username/pwd role - citizen), jon_rose@test.com/123 (username/pwd role - citizen)
+11) On Consumption Report page, please scroll down to see the results. It will be displayed below the form on same page.

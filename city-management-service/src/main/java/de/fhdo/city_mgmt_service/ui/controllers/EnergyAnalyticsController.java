@@ -46,7 +46,7 @@ public class EnergyAnalyticsController {
 			request.setStartDate(usage.getStartDate().format(format));
 			request.setZipCode(usage.getZipCode());
 			List<AnalyticsResponse> response = service.getAnaltics(request);
-			if (response != null) {
+			if (response != null && !response.isEmpty()) {
 				logger.info("Energy Consumption Report fetched successfully");
 				if (token.getRole().equalsIgnoreCase("city_planner")) {
 					EnergyAnalyticsDTO report = new EnergyAnalyticsDTO();
@@ -71,10 +71,10 @@ public class EnergyAnalyticsController {
 				}
 			} else {
 				EnergyAnalyticsDTO report = new EnergyAnalyticsDTO();
-				String msg = "Consumption Report could not fetched, try again later";
+				String msg = "Consumption Report is not available.";
 				model.addAttribute("consumption", report);
 				model.addAttribute("msg", msg);
-				logger.error("Consumption report no received");
+				logger.error("Consumption report not available");
 				if (token.getRole().equalsIgnoreCase("city_planner"))
 					return "planner_consumption_report";
 				else
