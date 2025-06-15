@@ -8,7 +8,6 @@ export class EurekaClientService {
 
   constructor(private readonly options: EurekaClient.EurekaConfig) {
     options.shouldUseDelta = false;
-    //Here to biind the eureka-js-client built-in logger with the one coming from @nestjs/common
     options.logger = {
       info: this.logger.log.bind(this.logger),
       warn: this.logger.warn.bind(this.logger),
@@ -20,7 +19,7 @@ export class EurekaClientService {
     this.startClient();
   }
 
-  // onModuleInit() { // to invoke the startClient() once the module spins up.
+  // onModuleInit() {
   //this.startClient();
   // }
 
@@ -36,7 +35,6 @@ export class EurekaClientService {
         switch (error.name) {
           case 'AggregateError':
             if ((error as any)?.code === 'ECONNREFUSED') {
-              // when there's connection err (e.g, eureka server down)
               this.logger.error(
                 '[ECONNREFUSED]: connection refused by Eureka server',
               );
