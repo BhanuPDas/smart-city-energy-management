@@ -17,13 +17,13 @@
         "tsConfigPath": "apps/auth/tsconfig.app.json"
       }
     },
-    "common": {
+    "infrastructure": {
       "type": "library",
-      "root": "libs/common",
+      "root": "infrastructure",
       "entryFile": "index",
-      "sourceRoot": "libs/common/src",
+      "sourceRoot": "infrastructure/src",
       "compilerOptions": {
-        "tsConfigPath": "libs/common/tsconfig.lib.json"
+        "tsConfigPath": "infrastructure/tsconfig.lib.json"
       }
     }
   },
