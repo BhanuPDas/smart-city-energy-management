@@ -6,15 +6,15 @@ export function setupSwagger(app: INestApplication): void {
     .setTitle('User Management Service API Documentation')
     .setDescription('Comprehensive API documentation for all endpoints')
     .setVersion('1.0')
-    .addBearerAuth() // For JWT Authentication in Swagger
-    .addTag('Users') 
+    .addBearerAuth()
+    .addTag('Users')
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
 
   SwaggerModule.setup('api-docs', app, document, {
     swaggerOptions: {
-      persistAuthorization: true, // Persist auth between page reloads
+      persistAuthorization: true,
     },
   });
 }

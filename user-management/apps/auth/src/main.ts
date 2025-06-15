@@ -1,14 +1,14 @@
 import { NestFactory } from '@nestjs/core';
-import { AuthModule } from './auth.module';
 import { ValidationPipe, VersioningType } from '@nestjs/common';
 import { Logger } from 'nestjs-pino';
 import * as cookieParser from 'cookie-parser';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { ConfigService } from '@nestjs/config';
 import { setupSwagger } from './swagger.config';
+import { AppModule } from './app.module';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AuthModule, {
+  const app = await NestFactory.create(AppModule, {
     bufferLogs: true,
   });
   const conifgService = app.get(ConfigService);
