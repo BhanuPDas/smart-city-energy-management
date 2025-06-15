@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<title>User Login</title>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet"
+		integrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT" crossorigin="anonymous">
+	<meta charset="UTF-8" />
+	<style>
+		body {
+			font-family: Arial, sans-serif;
+		}
+
+		.centered-form {
+			width: 40%;
+			margin: 50px auto;
+			border: 1px solid #ccc;
+			padding: 20px;
+			border-radius: 8px;
+			box-shadow: 2px 2px 10px #ccc;
+			background-color: beige;
+		}
+
+		table {
+			width: 100%;
+		}
+
+		td {
+			padding: 8px;
+			vertical-align: top;
+		}
+
+		label {
+			font-weight: bold;
+		}
+
+		.actions {
+			text-align: center;
+			padding-top: 15px;
+		}
+
+		input[type="text"],
+		input[type="email"],
+		input[type="tel"],
+		input[type="password"] {
+			width: 70%;
+		}
+	</style>
+</head>
+
+<body>
+	<div class="p-3 mb-2 bg-secondary-subtle text-secondary-emphasis">
+		<div class="centered-form">
+			<h2 style="text-align: center;">User Login</h2>
+
+			<form th:action="@{/api/v1/login}" th:object="${user}" method="post">
+				<table>
+					<tr>
+						<td><label for="email">Email</label></td>
+						<td><input type="email" id="email" th:field="*{email}" maxlength="35" required /></td>
+					</tr>
+					<tr>
+						<td><label for="password">Password</label></td>
+						<td><input type="password" id="password" maxlength="15" th:field="*{password}" required /></td>
+					</tr>
+				</table>
+				<div th:if="${msg}">
+				<div class="text-danger" th:text="${msg}" />
+				</div>
+				<div class="actions">
+					<button type="submit" class="btn btn-secondary">Login</button>
+				</div>
+			</form>
+		</div>
+</body>
+
+</html>
