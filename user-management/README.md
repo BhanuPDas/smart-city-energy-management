@@ -7,7 +7,7 @@ User Management microservice is responsible for the following user related opera
 Registration, GET all users, GET user by email, GET user by ID, Login and verify the incoming HTTP requests and attach user to them. <br/>
 
 
-## 1. Key Technical Features
+## 2. Key Technical Features
 1. Strongly Typed backend, leveraging the power of TypeScript, NestJS and Nodejs
 2. DDD style clean architecture
 3. Authentication and authorization system using JWT & Passport
@@ -15,10 +15,12 @@ Registration, GET all users, GET user by email, GET user by ID, Login and verify
 5. Pino and Loki for Logging in Grafana
 6. Prometheus for monitoring in Grafana
 
-## 2. Architecture Overview
+## 3. Architecture Overview
+![Architecture overview](https://github.com/user-attachments/assets/956a1e31-99ff-4279-b6e7-9ff48be6ad3e)
 
+## 4. File Tree
 
-## 3. File Tree
+```
 apps/
 ┗ auth/
 ┃ ┣ src/
@@ -37,7 +39,8 @@ apps/
 ┃ ┃ ┃   ┗ users.module.ts
 ┃ ┃ ┣ app.module.ts
 ┃ ┃ ┗ main.ts
-
+```
+```
 infrastructure/
 ┣ src/
 ┃ ┣ config/
@@ -56,8 +59,9 @@ infrastructure/
 ┃ ┣ public/
 ┃ ┣ swagger/
 ┃ ┗ index.ts
+```
 
-## 4. Quick Start
+## 5. Quick Start
 To Test this service independently, <br/>
 
 Run the service: <br/>
@@ -65,7 +69,7 @@ Run the service: <br/>
 Docker-compose up
 ```
 
-## 5.. Usage
+## 6. Usage
 After spinning up the docker image. Head to http://localhost:4000/api-docs where the API documention exists. <br/> 
 Under each route, you will find details such as what is the body or the param needed to perform the respective API operation as well as the structure of the expected result. <br/> <br/>
 
@@ -73,7 +77,7 @@ Under each route, you will find details such as what is the body or the param ne
 1. register
 2. login
 - then test the rest of the API ops. 
-## 6. Within the scope of this microservice and for testing purposes: 
+## 7. Within the scope of this microservice and for testing purposes: 
 
 ### The Nestjs app and the Grafana Tools under the following URLS :
 - NestJS App: http://localhost:4000
@@ -81,7 +85,7 @@ Under each route, you will find details such as what is the body or the param ne
 - Prometheus: http://localhost:9090/
 - Grafana: http://localhost:3000/
 
-## 7. At this moment, you need to manually register both Loki and Prometheus in Grafana, and as follows:  <br/>
+### At this moment, you need to manually register both Loki and Prometheus in Grafana, and as follows:  <br/>
 
 **For Loki** : <br/>
 1. Head to **Data source** 
