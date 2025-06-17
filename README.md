@@ -26,9 +26,32 @@ Related Documents can be found on this page [Wiki](https://github.com/BhanuPDas/
 3) A user can be registered either as "City Planner" or "Citizen". Accordingly, the UI screens and functionality will differ.
 4) After registration, please log in - **http://localhost:8500/login**
 5) Please note: At the time of adding a resident building energy source, the owner's email refers to the email address of the owner or the citizen who is the owner of the building, and it has to be a unique email ID.
-6) Grafana dashboards have been integrated and can be accessed at: **http://localhost:3000/**
+6) Dummy data are included in the script and dumped in DB at the startup to help in testing. No separate sql are needed to be executed.
+7) Sample User for testing: 
+    - Jon_Doe@Gmail.com/123 (username/pwd, role - city planner)
+    - bhanu@test.com/123 (username/pwd, role - city planner)
+    - rahul_new@test.com/123 (username/pwd, role - citizen)
+    - jon_rose@test.com/123 (username/pwd, role - citizen)
+8) On Consumption Report page, please scroll down to see the results. It will be displayed below the form on same page. <br/>
+
+9) Grafana dashboards have been integrated and can be accessed at: **http://localhost:3000/**
 7) Grafana dashboards have panels to show request throughput(Number of requests executed per second) and application logs of backend services. By default, Prometheus datasource is selected for request throughput; switch to the Loki datasource to view logs.
 8) On logging in for the first time, Grafana asks to change the password. Default user/pwd: admin/admin
-9) Dummy data are included in the script and dumped in DB at the startup to help in testing. No separate sql are needed to be executed.
-10) Sample User for testing: Jon_Doe@Gmail.com/123 (username/pwd role - city planner), bhanu@test.com/123 (username/pwd role - city planner), rahul_new@test.com/123 (username/pwd role - citizen), jon_rose@test.com/123 (username/pwd role - citizen)
-11) On Consumption Report page, please scroll down to see the results. It will be displayed below the form on same page.
+
+### Usage
+1. City_Planner: <br/>
+- Click on *Add/Edit Resident Energy Details*
+  - by flling in the form, you are associating the entered details with the respective citizen ( **Owner's Email** field).
+  - ***NOTE*** Start Date & End Date should be in the past.
+- Now navigate back to homepage and click on View *Consumption Reports*
+  - enter the citizen's email, and their respective details to generate the analytics report of the respective citizen.
+  - sample data for testing:
+    - Owner's Email: jon_rose@test.com
+    - City: Dortmund
+    - Zip Code: 44323
+    - Start Date: 2024-02-01
+2. Citizen: <br/>
+- Click on *Add/Edit Energy Details* to add or edit existing user's energy details.
+  - ***NOTE*** Start Date & End Date should be in the past.
+- Click on *View Consumption Report* 
+  - Fill in the form with citizen's details.
