@@ -1,36 +1,91 @@
-# User Management App Documentation 
-<br/>
-Version 1
-<br/>
+# User Management Service - Documentation 
+
 ## 1. Overview
 
-This User Management microservice is responsible for user related operations such as: 
+User Management microservice is responsible for the following user related operations: 
 <br/>
-Registration, GET all users, GET user by email, GET user by ID, Login <br/>
-And verify the incoming HTTP requests and attach user to them.<br/>
+Registration, GET all users, GET user by email, GET user by ID, Login and verify the incoming HTTP requests and attach user to them. <br/>
 
-## 2. Quick Start
+
+## 2. Key Technical Features
+1. Strongly Typed backend, leveraging the power of TypeScript, NestJS and Nodejs
+2. DDD style clean architecture
+3. Authentication and authorization system using JWT & Passport
+4. Abstract Repository Pattern in-the-box for simple data-access and abstract away data access logic.
+5. Pino and Loki for Logging in Grafana
+6. Prometheus for monitoring in Grafana
+
+## 3. Architecture Overview
+![Architecture overview](https://github.com/user-attachments/assets/956a1e31-99ff-4279-b6e7-9ff48be6ad3e)
+
+## 4. File Tree
+
+```
+apps/
+┗ auth/
+┃ ┣ src/
+┃ ┃ ┣ eureka-client/
+┃ ┃ ┣ modules/
+┃ ┃ ┃ ┣ auth/
+┃ ┃ ┃ ┃ ┣ guards/
+┃ ┃ ┃ ┃ ┣ strategies/
+┃ ┃ ┃ ┗ users/
+┃ ┃ ┃   ┣ applications/
+┃ ┃ ┃   ┣ controllers/
+┃ ┃ ┃   ┣ domain/
+┃ ┃ ┃   ┣ interfaces/
+┃ ┃ ┃   ┣ repository/
+┃ ┃ ┃   ┣ services/
+┃ ┃ ┃   ┗ users.module.ts
+┃ ┃ ┣ app.module.ts
+┃ ┃ ┗ main.ts
+```
+```
+infrastructure/
+┣ src/
+┃ ┣ config/
+┃ ┃ ┣ config.module.ts
+┃ ┃ ┣ database.config.ts
+┃ ┃ ┣ index.ts
+┃ ┃ ┣ typeorm.config.ts
+┃ ┃ ┗ validation.schema.ts
+┃ ┣ constants/
+┃ ┣ database/
+┃ ┃ ┣ abstract.entity.ts
+┃ ┃ ┣ abstract.repository.ts
+┃ ┃ ┣ database.module.ts
+┃ ┃ ┗ index.ts
+┃ ┣ migrations/
+┃ ┣ public/
+┃ ┣ swagger/
+┃ ┗ index.ts
+```
+
+## 5. Quick Start
+To Test this service independently, <br/>
+
 Run the service: <br/>
 ```bash 
 Docker-compose up
 ```
 
-## 3. Usage
+## 6. Usage
 After spinning up the docker image. Head to http://localhost:4000/api-docs where the API documention exists. <br/> 
 Under each route, you will find details such as what is the body or the param needed to perform the respective API operation as well as the structure of the expected result. <br/> <br/>
 
 ### Usage Flow
-- register
+1. register
+2. login
 - then test the rest of the API ops. 
-## 4. Within the scope of this microservice and for testing purposes: 
+## 7. Within the scope of this microservice and for testing purposes: 
 
-### Exist the Nestjs app and the Grafana Tools under the following URLS :
+### The Nestjs app and the Grafana Tools under the following URLS :
 - NestJS App: http://localhost:4000
 - Swagger: http://localhost:4000/api-docs
 - Prometheus: http://localhost:9090/
 - Grafana: http://localhost:3000/
 
-## 5. At this moment, you need to manually register both Loki and Prometheus in Grafana, and as follows:  <br/>
+### At this moment, you need to manually register both Loki and Prometheus in Grafana, and as follows:  <br/>
 
 **For Loki** : <br/>
 1. Head to **Data source** 
