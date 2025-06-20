@@ -55,6 +55,7 @@ Related Documents can be found on this page [Wiki](https://github.com/BhanuPDas/
   - ***NOTE*** Start Date & End Date should be in the past.
 - Click on *View Consumption Report* 
   - Fill in the form with the citizen's details.
+- Click on *View Recommendations* to see energy optimization recommendations.
   
 
 ## Description of Services
